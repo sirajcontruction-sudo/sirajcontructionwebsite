@@ -5,7 +5,6 @@ import Packages from "@/components/Packages";
 import Projects from "@/components/Projects";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import Process from "@/components/Process";
-import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import Contact from "@/components/Contact";
 import GoogleMap from "@/components/GoogleMap";
@@ -20,7 +19,6 @@ export default function Home() {
       <Projects />
       <WhyChooseUs />
       <Process />
-      <Testimonials />
       <FAQ />
       <Contact />
       <GoogleMap />
