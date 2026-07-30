@@ -3,15 +3,12 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import gsap from "gsap";
 import { ArrowRight, ShieldCheck, Building2 } from "lucide-react";
 import { useEnquiry } from "@/lib/enquiry-context";
 
 const stats = [
-  { value: 12, suffix: "+", label: "Years of Building" },
-  { value: 180, suffix: "+", label: "Projects Delivered" },
-  { value: 6, suffix: "L+", label: "Sqft Constructed" },
-  { value: 4, suffix: "", label: "Service Regions" },
+  { value: 5, suffix: "+", label: "Years of Building" },
+  { value: 20, suffix: "+", label: "Projects Delivered" }
 ];
 
 function Counter({ value, suffix }: { value: number; suffix: string }) {
@@ -20,17 +17,27 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obj = { val: 0 };
-    const tween = gsap.to(obj, {
-      val: value,
-      duration: 2,
-      ease: "power2.out",
-      onUpdate: () => {
-        if (el) el.textContent = Math.round(obj.val).toString();
-      },
+    let cancelled = false;
+    let tween: { kill: () => void } | undefined;
+
+    // Load GSAP lazily — it's only needed for this one decorative counter,
+    // so keep it out of the main/initial JS bundle.
+    import("gsap").then(({ default: gsap }) => {
+      if (cancelled || !el) return;
+      const obj = { val: 0 };
+      tween = gsap.to(obj, {
+        val: value,
+        duration: 2,
+        ease: "power2.out",
+        onUpdate: () => {
+          if (el) el.textContent = Math.round(obj.val).toString();
+        },
+      });
     });
+
     return () => {
-      tween.kill();
+      cancelled = true;
+      tween?.kill();
     };
   }, [value]);
 
@@ -48,8 +55,8 @@ export default function Hero() {
   return (
     <section id="top" className="relative overflow-hidden bg-navy pb-24 pt-32 sm:pt-40">
       <div className="pointer-events-none absolute inset-0 bg-mesh opacity-80" />
-      <div className="pointer-events-none absolute -left-32 top-24 h-96 w-96 rounded-full bg-royal-600/30 blur-[110px]" />
-      <div className="pointer-events-none absolute -right-24 bottom-0 h-[28rem] w-[28rem] rounded-full bg-sky/20 blur-[130px]" />
+      <div className="pointer-events-none absolute -left-32 top-24 h-96 w-96 rounded-full bg-royal-600/30 blur-[55px] sm:blur-[110px]" />
+      <div className="pointer-events-none absolute -right-24 bottom-0 h-[28rem] w-[28rem] rounded-full bg-sky/20 blur-[65px] sm:blur-[130px]" />
 
       {/* Blueprint grid overlay */}
       <svg
@@ -141,7 +148,13 @@ export default function Hero() {
             className="absolute inset-8 flex items-center justify-center rounded-3xl bg-royal-gradient shadow-glow-sky"
           >
             <div className="relative h-40 w-40">
-              <Image src="/logo.png" alt="SRAJ Construction & Interior" fill className="object-contain drop-shadow-2xl" />
+              <Image
+                src="/logo.png"
+                alt="SRAJ Construction & Interior"
+                fill
+                sizes="160px"
+                className="object-contain drop-shadow-2xl"
+              />
             </div>
           </motion.div>
           <motion.div

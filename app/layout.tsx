@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
 import FloatingButtons from "@/components/FloatingButtons";
-import EnquiryModal from "@/components/EnquiryModal";
+import EnquiryModal from "@/components/EnquiryModalLoader";
 import { SITE } from "@/lib/utils";
 
 const inter = Inter({

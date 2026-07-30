@@ -28,7 +28,14 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2.5">
               <div className="relative h-10 w-10">
-                <Image src="/logo.png" alt="SRAJ Construction & Interior logo" fill className="object-contain" />
+                <Image
+                  src="/logo.png"
+                  alt="SRAJ Construction & Interior logo"
+                  fill
+                  sizes="40px"
+                  loading="lazy"
+                  className="object-contain"
+                />
               </div>
               <div>
                 <p className="font-display text-base font-semibold text-white">SRAJ</p>

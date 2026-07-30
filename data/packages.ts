@@ -533,7 +533,7 @@ export const constructionTiers: ConstructionTier[] = [
     id: "budget",
     name: "Budget",
     rate: 2299,
-    tagline: "Smart essentials, honest quality",
+    tagline: "Smart essentials, honest quality,improve your living ",
     sections: budgetSections,
     exclusions: commonExclusions,
   },
