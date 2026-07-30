@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ConstructionTier } from "@/data/packages";
 import { cn } from "@/lib/utils";
-import PackageCard from "./PackageCard";
+import MobilePackageCard from "./MobilePackageCard";
 
 interface PackageCarouselProps {
   tiers: ConstructionTier[];
@@ -65,7 +65,7 @@ export default function PackageCarousel({ tiers, activeCategoryId }: PackageCaro
             }}
             className="w-[86vw] shrink-0 snap-center sm:w-[380px]"
           >
-            <PackageCard tier={tier} index={i} activeCategoryId={activeCategoryId} />
+            <MobilePackageCard tier={tier} activeCategoryId={activeCategoryId} />
           </div>
         ))}
       </div>
