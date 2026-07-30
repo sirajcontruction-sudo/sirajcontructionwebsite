@@ -16,24 +16,24 @@ type Project = {
 };
 
 const constructionProjects: Project[] = [
-  { id: "c1", title: "Premium Duplex Residence", category: "Construction", image: "/projects/construction/construction-1.jpeg" },
-  { id: "c2", title: "Modern Family Residence", category: "Construction", image: "/projects/construction/construction-2.jpeg" },
-  { id: "c3", title: "Contemporary Luxury Home", category: "Construction", image: "/projects/construction/construction-3.jpeg" },
+  { id: "c1", title: "Premium Duplex Residence", category: "Construction", image: "/projects/Construction/construction-1.jpeg" },
+  { id: "c2", title: "Modern Family Residence", category: "Construction", image: "/projects/Construction/construction-2.jpeg" },
+  { id: "c3", title: "Contemporary Luxury Home", category: "Construction", image: "/projects/Construction/construction-3.jpeg" },
 ];
 
 const interiorProjects: Project[] = [
-  { id: "i1", title: "Designer TV Unit", category: "Interior", image: "/projects/interior/interior-1.jpg" },
-  { id: "i2", title: "Luxury Living Room", category: "Interior", image: "/projects/interior/interior-2.jpg" },
-  { id: "i3", title: "Modern Living Lounge", category: "Interior", image: "/projects/interior/interior-3.jpg" },
-  { id: "i4", title: "Compact Modular Kitchen", category: "Interior", image: "/projects/interior/interior-4.jpg" },
-  { id: "i5", title: "Contemporary Modular Kitchen", category: "Interior", image: "/projects/interior/interior-5.jpg" },
-  { id: "i6", title: "Modern Kitchen Interior", category: "Interior", image: "/projects/interior/interior-6.jpg" },
-  { id: "i7", title: "Master Bedroom Interior", category: "Interior", image: "/projects/interior/interior-7.jpg" },
-  { id: "i8", title: "Premium Sliding Wardrobe", category: "Interior", image: "/projects/interior/interior-8.jpg" },
-  { id: "i9", title: "Master bedroom wardrobes", category: "Interior", image: "/projects/interior/interior-9.jpg" },
-  { id: "i10", title: "Bedroom Wardrobe Design", category: "Interior", image: "/projects/interior/interior-10.jpg" },
-  { id: "i11", title: "Contemporary Bedroom", category: "Interior", image: "/projects/interior/interior-11.jpg" },
-  { id: "i12", title: "Luxury Wardrobe Design", category: "Interior", image: "/projects/interior/interior-12.jpg" },
+  { id: "i1", title: "Designer TV Unit", category: "Interior", image: "/projects/Interior/interior-1.jpg" },
+  { id: "i2", title: "Luxury Living Room", category: "Interior", image: "/projects/Interior/interior-2.jpg" },
+  { id: "i3", title: "Modern Living Lounge", category: "Interior", image: "/projects/Interior/interior-3.jpg" },
+  { id: "i4", title: "Compact Modular Kitchen", category: "Interior", image: "/projects/Interior/interior-4.jpg" },
+  { id: "i5", title: "Contemporary Modular Kitchen", category: "Interior", image: "/projects/Interior/interior-5.jpg" },
+  { id: "i6", title: "Modern Kitchen Interior", category: "Interior", image: "/projects/Interior/interior-6.jpg" },
+  { id: "i7", title: "Master Bedroom Interior", category: "Interior", image: "/projects/Interior/interior-7.jpg" },
+  { id: "i8", title: "Premium Sliding Wardrobe", category: "Interior", image: "/projects/Interior/interior-8.jpg" },
+  { id: "i9", title: "Master bedroom wardrobes", category: "Interior", image: "/projects/Interior/interior-9.jpg" },
+  { id: "i10", title: "Bedroom Wardrobe Design", category: "Interior", image: "/projects/Interior/interior-10.jpg" },
+  { id: "i11", title: "Contemporary Bedroom", category: "Interior", image: "/projects/Interior/interior-11.jpg" },
+  { id: "i12", title: "Luxury Wardrobe Design", category: "Interior", image: "/projects/Interior/interior-12.jpg" },
 ];
 
 const INTERIOR_PREVIEW_COUNT = 6;
