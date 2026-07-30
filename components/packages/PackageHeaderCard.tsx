@@ -54,20 +54,13 @@ function PackageHeaderCard({ tier, index }: PackageHeaderCardProps) {
         </p>
         <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-soft">{tier.tagline}</p>
 
-        <div className="mt-6 space-y-2.5">
+        <div className="mt-6">
           <button
             type="button"
             onClick={() => openEnquiry(`Book Consultation — ${tier.name} Package`)}
             className="btn-primary w-full"
           >
             Book Consultation
-          </button>
-          <button
-            type="button"
-            onClick={() => openEnquiry(`Download Brochure — ${tier.name} Package`)}
-            className="btn-secondary w-full"
-          >
-            Download Brochure
           </button>
         </div>
       </div>

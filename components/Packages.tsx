@@ -68,7 +68,7 @@ export default function Packages() {
         </div>
 
         {/* Compare packages — synced category nav + comparison grid */}
-        <div className="mt-16 lg:grid lg:grid-cols-[200px_1fr] lg:items-start lg:gap-10">
+        <div className="mt-16 lg:grid lg:grid-cols-[180px_1fr] lg:items-start lg:gap-8">
           <CategoryNav
             categories={packageCategories}
             activeId={activeCategoryId}
@@ -83,7 +83,7 @@ export default function Packages() {
             />
 
             {/* Tablet: 2-up grid. Desktop (lg+): full 4-up row. */}
-            <div className="hidden md:grid md:grid-cols-2 md:gap-5 lg:grid-cols-4 lg:items-stretch lg:gap-4">
+            <div className="hidden md:grid md:grid-cols-2 md:gap-5 lg:grid-cols-4 lg:items-stretch lg:gap-3">
               {constructionTiers.map((tier) => (
                 <PackageFeaturePanel
                   key={tier.id}

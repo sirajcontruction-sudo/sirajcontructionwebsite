@@ -45,7 +45,7 @@ function PackageFeaturePanel({ tier, activeCategoryId }: PackageFeaturePanelProp
         )}
       >
         {/* Compact sticky mini-header */}
-        <div className="rounded-t-3xl border-b border-black/5 bg-white px-4 py-4 lg:sticky lg:top-28 lg:z-10">
+        <div className="rounded-t-3xl border-b border-black/5 bg-white px-3 py-4 lg:sticky lg:top-28 lg:z-10">
           <p className="truncate text-[11px] font-semibold uppercase tracking-wide text-royal-700">
             {tier.name}
           </p>
@@ -56,7 +56,7 @@ function PackageFeaturePanel({ tier, activeCategoryId }: PackageFeaturePanelProp
         </div>
 
         {/* Synced category content */}
-        <div className="flex-1 px-4 py-4">
+        <div className="flex-1 px-3 py-4">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.div
               key={activeCategoryId}

@@ -91,21 +91,14 @@ function MobilePackageCard({ tier, activeCategoryId }: MobilePackageCardProps) {
           </AnimatePresence>
         </div>
 
-        {/* CTAs — always reachable, large touch targets */}
-        <div className="space-y-2.5 border-t border-black/5 px-6 py-5">
+        {/* CTA — always reachable, large touch target */}
+        <div className="border-t border-black/5 px-6 py-5">
           <button
             type="button"
             onClick={() => openEnquiry(`Book Consultation — ${tier.name} Package`)}
             className="btn-primary w-full"
           >
             Book Consultation
-          </button>
-          <button
-            type="button"
-            onClick={() => openEnquiry(`Download Brochure — ${tier.name} Package`)}
-            className="btn-secondary w-full"
-          >
-            Download Brochure
           </button>
         </div>
       </div>
