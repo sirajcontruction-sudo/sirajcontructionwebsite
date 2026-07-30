@@ -25,22 +25,37 @@ const fraunces = Fraunces({
 
 const siteUrl = "https://www.srajconstruction.com";
 
+// e.g. "Chennai, Trichy & Tirunelveli"
+const serviceAreaAmpersand = SITE.serviceAreas.join(", ").replace(/,([^,]*)$/, " &$1");
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${SITE.name} | Premium Construction & Interiors in Chennai`,
+    default: `${SITE.name} | Premium Construction & Interiors in ${serviceAreaAmpersand}`,
     template: `%s | ${SITE.name}`,
   },
   description:
-    "SRAJ Construction & Interior — civil contracting, residential construction, architecture, interior design, turnkey construction and renovation across Kolathur, Ambattur, Madhavaram and Chennai.",
+    `SRAJ Construction & Interior — civil contracting, residential construction, architecture, interior design, turnkey construction and renovation across ${serviceAreaAmpersand}.`,
   keywords: [
     "construction company Chennai",
+    "construction company Trichy",
+    "construction company Tirunelveli",
     "civil contractor Chennai",
+    "civil contractor Trichy",
+    "civil contractor Tirunelveli",
     "interior design Chennai",
+    "interior design Trichy",
+    "interior design Tirunelveli",
     "turnkey construction Chennai",
+    "turnkey construction Trichy",
+    "turnkey construction Tirunelveli",
+    "architecture firm Trichy",
+    "architecture firm Tirunelveli",
     "house construction Kolathur",
     "house construction Ambattur",
     "renovation Chennai",
+    "renovation Trichy",
+    "renovation Tirunelveli",
     "SRAJ Construction",
   ],
   authors: [{ name: SITE.name }],
@@ -48,17 +63,17 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     url: siteUrl,
-    title: `${SITE.name} | Premium Construction & Interiors in Chennai`,
+    title: `${SITE.name} | Premium Construction & Interiors in ${serviceAreaAmpersand}`,
     description:
-      "Civil contracting, construction, architecture, interior design, turnkey construction and renovation — Kolathur, Ambattur, Madhavaram & Chennai.",
+      `Civil contracting, construction, architecture, interior design, turnkey construction and renovation across ${serviceAreaAmpersand}.`,
     siteName: SITE.name,
     images: [{ url: "/logo.png", width: 520, height: 575, alt: SITE.name }],
   },
   twitter: {
     card: "summary",
-    title: `${SITE.name} | Premium Construction & Interiors`,
+    title: `${SITE.name} | Premium Construction & Interiors in ${serviceAreaAmpersand}`,
     description:
-      "Civil contracting, construction, architecture, interior design, turnkey construction and renovation in Chennai.",
+      `Civil contracting, construction, architecture, interior design, turnkey construction and renovation across ${serviceAreaAmpersand}.`,
     images: ["/logo.png"],
   },
   icons: {
@@ -80,6 +95,7 @@ const jsonLd = {
   url: siteUrl,
   telephone: SITE.phone,
   email: SITE.email,
+  // Office location — stays in Chennai.
   address: {
     "@type": "PostalAddress",
     streetAddress: "No.41, Thirumal Nagar, Kadappa Road, Madhanakuppam",
@@ -88,7 +104,12 @@ const jsonLd = {
     addressRegion: "Tamil Nadu",
     addressCountry: "IN",
   },
-  areaServed: SITE.serviceAreas,
+  // Cities SRAJ actively delivers construction, architecture, interior
+  // design and turnkey projects in (office remains Chennai-based).
+  areaServed: SITE.serviceAreas.map((city) => ({
+    "@type": "City",
+    name: city,
+  })),
   priceRange: "₹₹",
 };
 

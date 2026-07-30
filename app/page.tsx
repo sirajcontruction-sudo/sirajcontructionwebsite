@@ -9,6 +9,7 @@ import Services from "@/components/Services";
 // and SEO content are unaffected — only the JS download/parse is deferred.
 const Packages = dynamic(() => import("@/components/Packages"));
 const Projects = dynamic(() => import("@/components/Projects"));
+const ServiceLocations = dynamic(() => import("@/components/ServiceLocations"));
 const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
 const Process = dynamic(() => import("@/components/Process"));
 const FAQ = dynamic(() => import("@/components/FAQ"));
@@ -23,6 +24,7 @@ export default function Home() {
       <Services />
       <Packages />
       <Projects />
+      <ServiceLocations />
       <WhyChooseUs />
       <Process />
       <FAQ />

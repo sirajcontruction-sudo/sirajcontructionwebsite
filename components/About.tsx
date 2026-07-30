@@ -23,14 +23,15 @@ export default function About() {
           >
             <span className="eyebrow">Who We Are</span>
             <h2 className="heading-display mt-5 text-3xl sm:text-4xl lg:text-[2.75rem]">
-              A Chennai-built construction partner, engineered around trust.
+              A Chennai-headquartered construction partner, engineered around trust.
             </h2>
             <p className="mt-6 text-base leading-relaxed text-ink-soft">
               SRAJ Construction &amp; Interior is a civil contracting and interior design
-              practice serving Kolathur, Ambattur, Madhavaram and greater Chennai. We bring
-              together structural engineers, architects and interior designers under one
-              roof — so your home moves from concept to keys-in-hand without switching
-              contractors, without surprise costs, and without compromise on quality.
+              practice headquartered in Chennai and serving clients across Chennai, Trichy
+              and Tirunelveli. We bring together structural engineers, architects and
+              interior designers under one roof — so your home moves from concept to
+              keys-in-hand without switching contractors, without surprise costs, and
+              without compromise on quality.
             </p>
             <p className="mt-4 text-base leading-relaxed text-ink-soft">
               From civil contracting and residential construction to architecture, interior

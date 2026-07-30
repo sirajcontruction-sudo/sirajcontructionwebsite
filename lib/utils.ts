@@ -26,19 +26,14 @@ export const SITE = {
 
   email: "sraj.enquiry@gmail.com",
 
-  address: "NSRAJ Construction & Interior | Civil contractor | Interior Designer | Architecture | Kolathur | Ambattur | Madhavaram",
+  // Office address — stays in Chennai. Do not change.
+  address: "No.41, Thirumal Nagar, Kadappa Road, Madhanakuppam, Chennai – 600099",
 
   addressShort: "Madhanakuppam, Chennai – 600099",
 
-  serviceAreas: [
-    "SRAJ Construction & Interior",
-    "Civil contractor",
-    "Interior Designer",
-    "Architecture",
-    "Kolathur",
-    "Ambattur",
-    "Madhavaram"
-  ],
+  // Primary cities we actively deliver construction, architecture, interior
+  // design and turnkey projects in. The office itself remains in Chennai.
+  serviceAreas: ["Chennai", "Trichy", "Tirunelveli"],
 
   mapEmbedQuery:
     "No.41, Thirumal Nagar, Kadappa Road, Madhanakuppam, Chennai 600099",

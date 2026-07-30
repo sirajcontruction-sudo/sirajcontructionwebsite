@@ -373,7 +373,7 @@ export default function Projects() {
         <div className="max-w-xl text-center sm:text-left">
           <span className="eyebrow">Our Portfolio</span>
           <h2 className="heading-display mt-5 text-3xl sm:text-4xl">
-            Selected projects across Chennai
+            Selected projects across Chennai, Trichy &amp; Tirunelveli
           </h2>
         </div>
 

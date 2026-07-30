@@ -44,7 +44,8 @@ export default function Footer() {
             </div>
             <p className="mt-5 text-sm leading-relaxed text-white/55">
               Civil contracting, construction, architecture, interior design and turnkey
-              builds across Chennai — engineered with transparent, fixed-rate packages.
+              builds across Chennai, Trichy and Tirunelveli — engineered with transparent,
+              fixed-rate packages.
             </p>
             <div className="mt-5 flex gap-3">
               {[Instagram, Facebook, Linkedin].map((Icon, i) => (

@@ -80,7 +80,7 @@ export default function Hero() {
             className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-sky-light backdrop-blur"
           >
             <ShieldCheck className="h-3.5 w-3.5" />
-            Chennai&apos;s Trusted Civil Contractor
+            Trusted Civil Contractor — Chennai, Trichy &amp; Tirunelveli
           </motion.div>
 
           <motion.h1
@@ -99,9 +99,9 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.22 }}
             className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg"
           >
-            SRAJ Construction &amp; Interior delivers civil contracting, architecture and
-            turnkey construction across Kolathur, Ambattur, Madhavaram and Chennai —
-            engineered with transparent, fixed-rate packages from foundation to final finish.
+            Premium construction, architecture &amp; interior solutions across Chennai,
+            Trichy and Tirunelveli — engineered with transparent, fixed-rate packages
+            from foundation to final finish.
           </motion.p>
 
           <motion.div

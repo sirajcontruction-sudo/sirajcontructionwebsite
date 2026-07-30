@@ -15,7 +15,7 @@ export const faqs: FAQItem[] = [
     id: "f2",
     question: "Do you provide free site visits and quotations?",
     answer:
-      "Yes. We offer a free initial site visit and consultation within Chennai, Kolathur, Ambattur and Madhavaram, followed by a detailed written quotation based on your plot size and chosen package.",
+      "Yes. We offer a free initial site visit and consultation across Chennai, Trichy and Tirunelveli, followed by a detailed written quotation based on your plot size and chosen package.",
   },
   {
     id: "f3",
@@ -39,6 +39,6 @@ export const faqs: FAQItem[] = [
     id: "f6",
     question: "What areas do you currently service?",
     answer:
-      "We actively service Kolathur, Ambattur, Madhavaram and greater Chennai. For projects outside these areas, please reach out and we'll confirm feasibility.",
+      "We actively service Chennai (including Kolathur, Ambattur and Madhavaram), Trichy and Tirunelveli. For projects outside these cities, please reach out and we'll confirm feasibility.",
   },
 ];
