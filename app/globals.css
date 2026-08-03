@@ -377,6 +377,95 @@ summary {
     radial-gradient(1px 1px at 62% 55%, rgba(186, 230, 253, 0.3), transparent);
 }
 
+/* ---------------------------------------------------------------------------
+   Reveal + entrance animations, in CSS.
+
+   These replace framer-motion on the critical path. framer was being pulled
+   into the initial bundle by the root layout (navbar, scroll bar, floating
+   buttons, motion config) and by Hero/About/Services — roughly 50KB gzipped
+   that a phone had to download, parse and execute before it could respond to
+   a tap. Every one of those animations was a one-shot reveal, a hover lift or
+   a progress bar: all of it expressible in ~40 lines of CSS with no runtime.
+
+   framer still handles the below-the-fold sections, where genuinely stateful
+   work happens (AnimatePresence, shared-element `layoutId` pill highlights) —
+   but it now loads in their lazy chunk instead of blocking first paint.
+--------------------------------------------------------------------------- */
+
+/* Scroll-triggered. Starts offset + transparent; `.is-visible` is added once
+   by a single shared IntersectionObserver, which then stops observing. */
+.reveal {
+  opacity: 0;
+  transform: translate3d(var(--rv-x, 0), var(--rv-y, 16px), 0);
+  transition: opacity 240ms var(--ease-premium), transform 240ms var(--ease-premium);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Above-the-fold entrance. No observer needed — these are on screen at load,
+   so they animate straight away. `both` holds the from-state during the delay
+   so nothing flashes in before its turn. */
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+.enter-up {
+  animation: enter-up 360ms var(--ease-premium) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+@keyframes enter-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.enter-fade {
+  animation: enter-fade 360ms var(--ease-premium) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+/* Card hover lift, previously framer's `whileHover={{ y: -6 }}`. Doing it in
+   CSS also removes the conflict that had the browser re-interpolating framer's
+   per-frame inline transform writes. */
+.hover-lift {
+  transition: transform 200ms var(--ease-premium);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hover-lift:hover {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .enter-up,
+  .enter-fade {
+    animation: none;
+  }
+  .hover-lift {
+    transition: none;
+  }
+  .hover-lift:hover {
+    transform: none;
+  }
+}
+
 /* Honour the OS-level reduced-motion setting. Transitions collapse to
    effectively instant rather than being removed outright, so state changes
    (accordion open, menu toggle) still complete and nothing gets stuck

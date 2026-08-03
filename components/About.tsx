@@ -1,8 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { useReveal } from "@/lib/use-reveal";
+
 import { Award, Users, Compass, HeartHandshake } from "lucide-react";
-import { DURATION, EASE_PREMIUM, hoverLift, staggerDelay } from "@/lib/motion";
 
 const pillars = [
   { icon: Compass, title: "Precise Planning", desc: "Every project begins with detailed structural and architectural drawings before a single brick is laid." },
@@ -12,16 +13,14 @@ const pillars = [
 ];
 
 export default function About() {
+  const ref = useRef<HTMLElement>(null);
+  useReveal(ref);
+
   return (
-    <section id="about" className="section-py relative overflow-hidden bg-white">
+    <section ref={ref} id="about" className="section-py relative overflow-hidden bg-white">
       <div className="container-px mx-auto max-w-7xl">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -16 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
-          >
+          <div data-reveal className="reveal [--rv-x:-16px] [--rv-y:0px]">
             <span className="eyebrow">Who We Are</span>
             <h2 className="heading-display mt-5 text-3xl sm:text-4xl lg:text-[2.75rem]">
               A Chennai-headquartered construction partner, engineered around trust.
@@ -55,33 +54,27 @@ export default function About() {
                 <p className="text-xs text-ink-soft">Single Point of Contact</p>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 16 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
-            className="grid grid-cols-1 gap-5 sm:grid-cols-2"
+          <div
+            data-reveal
+            className="reveal [--rv-x:16px] [--rv-y:0px] grid grid-cols-1 gap-5 sm:grid-cols-2"
           >
             {pillars.map((p, i) => (
-              <motion.div
+              <div
                 key={p.title}
-                initial={{ opacity: 0, y: 14 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: DURATION.card, delay: staggerDelay(i, 0.06), ease: EASE_PREMIUM }}
-                whileHover={hoverLift}
-                className="card-premium p-6"
+                data-reveal
+                style={{ transitionDelay: `${Math.min(i, 4) * 60}ms` }}
+                className="reveal hover-lift card-premium p-6"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-royal-gradient">
                   <p.icon className="h-5 w-5 text-white" />
                 </div>
                 <h3 className="mt-4 font-display text-base font-semibold text-navy">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-soft">{p.desc}</p>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

@@ -1,45 +1,38 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { useReveal } from "@/lib/use-reveal";
+
 import { ArrowUpRight } from "lucide-react";
 import { services } from "@/data/services";
-import { DURATION, EASE_PREMIUM, hoverLift, staggerDelay } from "@/lib/motion";
 
 export default function Services() {
+  const ref = useRef<HTMLElement>(null);
+  useReveal(ref);
+
   return (
-    <section id="services" className="section-py mesh-bg relative">
+    <section ref={ref} id="services" className="section-py mesh-bg relative">
       <div className="container-px mx-auto max-w-7xl">
         <div className="mx-auto max-w-2xl text-center">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="eyebrow"
-          >
+          <span data-reveal className="reveal eyebrow">
             What We Do
-          </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.05 }}
-            className="heading-display mt-5 text-3xl sm:text-4xl"
+          </span>
+          <h2
+            data-reveal
+            style={{ transitionDelay: "50ms" }}
+            className="reveal heading-display mt-5 text-3xl sm:text-4xl"
           >
             Full-spectrum construction &amp; design services
-          </motion.h2>
+          </h2>
         </div>
 
         <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s, i) => (
-            <motion.div
+            <div
               key={s.id}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: DURATION.card, delay: staggerDelay(i % 3, 0.06), ease: EASE_PREMIUM }}
-              whileHover={hoverLift}
-              whileTap={{ scale: 0.99 }}
-              className="group card-premium relative overflow-hidden p-7"
+              data-reveal
+              style={{ transitionDelay: `${(i % 3) * 60}ms` }}
+              className="reveal hover-lift group card-premium relative overflow-hidden p-7"
             >
               <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-royal-50 transition-transform duration-[240ms] ease-premium group-hover:scale-[1.4]" />
               <div className="relative">
@@ -64,7 +57,7 @@ export default function Services() {
                   <ArrowUpRight className="h-4 w-4 transition-transform duration-200 ease-premium group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </a>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

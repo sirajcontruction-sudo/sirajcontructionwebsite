@@ -2,10 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useEnquiry } from "@/lib/enquiry-context";
-import { EASE_PREMIUM } from "@/lib/motion";
 
 const stats = [
   { value: 5, suffix: "+", label: "Years of Building" },
@@ -82,42 +80,30 @@ export default function Hero() {
 
       <div className="container-px relative mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.32, ease: EASE_PREMIUM }}
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-sky-light backdrop-blur"
+          <div
+            className="enter-up [--enter-delay:0ms] inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-sky-light backdrop-blur"
           >
             <ShieldCheck className="h-3.5 w-3.5" />
             Trusted Civil Contractor — Chennai, Trichy &amp; Tirunelveli
-          </motion.div>
+          </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.36, delay: 0.06, ease: EASE_PREMIUM }}
-            className="mt-6 font-display text-4xl font-medium leading-[1.08] text-white sm:text-5xl lg:text-6xl"
+          <h1
+            className="enter-up [--enter-delay:60ms] mt-6 font-display text-4xl font-medium leading-[1.08] text-white sm:text-5xl lg:text-6xl"
           >
             We build homes that
             <span className="block shimmer-text">stand for Generations.</span>
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.36, delay: 0.12, ease: EASE_PREMIUM }}
-            className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg"
+          <p
+            className="enter-up [--enter-delay:120ms] mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg"
           >
             Premium construction, architecture &amp; interior solutions across Chennai,
             Trichy and Tirunelveli — engineered with transparent, fixed-rate packages
             from foundation to final finish.
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.36, delay: 0.18, ease: EASE_PREMIUM }}
-            className="mt-9 flex flex-wrap items-center gap-4"
+          <div
+            className="enter-up [--enter-delay:180ms] mt-9 flex flex-wrap items-center gap-4"
           >
             <button onClick={() => openEnquiry("Free Consultation")} className="btn-primary">
               Book Free Consultation <ArrowRight className="h-4 w-4" />
@@ -125,13 +111,10 @@ export default function Hero() {
             <a href="#packages" className="btn-ghost-light">
               View Packages
             </a>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.36, delay: 0.24, ease: EASE_PREMIUM }}
-            className="mt-14 grid grid-cols-2 gap-6 border-t border-white/10 pt-8 sm:grid-cols-4"
+          <div
+            className="enter-fade [--enter-delay:240ms] mt-14 grid grid-cols-2 gap-6 border-t border-white/10 pt-8 sm:grid-cols-4"
           >
             {stats.map((s) => (
               <div key={s.label}>
@@ -141,14 +124,11 @@ export default function Hero() {
                 <p className="mt-1 text-xs text-white/55">{s.label}</p>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 16 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.36, delay: 0.2, ease: EASE_PREMIUM }}
-          className="relative mx-auto hidden aspect-[4/5] w-full max-w-md lg:block"
+        <div
+          className="enter-up [--enter-delay:200ms] relative mx-auto hidden aspect-[4/5] w-full max-w-md lg:block"
         >
           {/* Outer glass frame. The fill is a flat translucent white rather
               than `backdrop-blur`: a backdrop filter forces the compositor to
@@ -232,13 +212,17 @@ export default function Hero() {
                   height={221}
                   sizes="200px"
                   quality={90}
-                  priority
+                  // No `priority`. The card this sits in is `hidden lg:block`,
+                  // but `priority` emits a <link rel="preload"> unconditionally
+                  // — so phones were downloading a logo they never display, on
+                  // the critical path. The navbar logo keeps `priority`; that
+                  // one is genuinely visible at every breakpoint.
                   className="relative block h-auto w-[200px] select-none"
                 />
               </div>
             </span>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

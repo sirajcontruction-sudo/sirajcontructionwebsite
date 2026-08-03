@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import LenisProvider from "@/lib/lenis-provider";
-import MotionProvider from "@/lib/motion-provider";
 import { EnquiryProvider } from "@/lib/enquiry-context";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -21,7 +20,9 @@ const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
-  weight: ["400", "500", "600"],
+  // 400 dropped: no `font-display font-normal` pairing exists in the app, so
+  // it was a font file downloaded and never used.
+  weight: ["500", "600"],
 });
 
 const siteUrl = "https://www.srajconstruction.com";
@@ -135,18 +136,16 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        <MotionProvider>
-          <LenisProvider>
-            <EnquiryProvider>
-              <ScrollProgress />
-              <Navbar />
-              {children}
-              <Footer />
-              <FloatingButtons />
-              <EnquiryModal />
-            </EnquiryProvider>
-          </LenisProvider>
-        </MotionProvider>
+        <LenisProvider>
+          <EnquiryProvider>
+            <ScrollProgress />
+            <Navbar />
+            {children}
+            <Footer />
+            <FloatingButtons />
+            <EnquiryModal />
+          </EnquiryProvider>
+        </LenisProvider>
       </body>
     </html>
   );

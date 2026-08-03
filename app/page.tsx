@@ -3,18 +3,14 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Services from "@/components/Services";
 
-// Below-the-fold sections are code-split into their own chunks so the
-// critical path (Hero/About/Services) parses and hydrates faster on
-// mobile. They still render on the server (ssr defaults to true) so LCP
-// and SEO content are unaffected — only the JS download/parse is deferred.
-const Packages = dynamic(() => import("@/components/Packages"));
-const Projects = dynamic(() => import("@/components/Projects"));
-const ServiceLocations = dynamic(() => import("@/components/ServiceLocations"));
-const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
-const Process = dynamic(() => import("@/components/Process"));
-const FAQ = dynamic(() => import("@/components/FAQ"));
-const Contact = dynamic(() => import("@/components/Contact"));
-const GoogleMap = dynamic(() => import("@/components/GoogleMap"));
+// Hero / About / Services are the critical path and ship in the initial
+// bundle. None of them import framer-motion any more — their reveals are CSS —
+// so the initial JS is React plus a handful of lucide icons.
+//
+// Everything else is one deferred chunk (see components/BelowFold.tsx). It
+// still renders on the server, so the markup, LCP text and SEO content are
+// identical; only the JS download and hydration are deferred.
+const BelowFold = dynamic(() => import("@/components/BelowFold"));
 
 export default function Home() {
   return (
@@ -22,14 +18,7 @@ export default function Home() {
       <Hero />
       <About />
       <Services />
-      <Packages />
-      <Projects />
-      <ServiceLocations />
-      <WhyChooseUs />
-      <Process />
-      <FAQ />
-      <Contact />
-      <GoogleMap />
+      <BelowFold />
     </main>
   );
 }

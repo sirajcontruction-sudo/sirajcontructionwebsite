@@ -24,14 +24,6 @@ export const DURATION = {
   page: 0.3,
 } as const;
 
-/** Standard scroll reveal: a short rise + fade, played once. */
-export const revealUp = {
-  initial: { opacity: 0, y: 16 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-80px" } as const,
-  transition: { duration: DURATION.card, ease: EASE_PREMIUM },
-};
-
 /**
  * Per-item stagger for grids. Capped at 4 items' worth of delay so a long
  * row never leaves the last card visibly lagging behind the first.
@@ -40,9 +32,7 @@ export function staggerDelay(index: number, step = 0.05, max = 4) {
   return Math.min(index, max) * step;
 }
 
-/** Card lift on hover. Transform-only, so it stays on the compositor. */
+/** Card lift on hover. Transform-only, so it stays on the compositor.
+ *  Above-the-fold sections use the `.hover-lift` CSS class instead — this is
+ *  for the below-fold sections that still run framer. */
 export const hoverLift = { y: -6 };
-export const hoverLiftTransition = {
-  duration: DURATION.hover,
-  ease: EASE_PREMIUM,
-};

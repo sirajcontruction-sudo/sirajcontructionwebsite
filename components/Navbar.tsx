@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone } from "lucide-react";
 import { SITE } from "@/lib/utils";
 import { useEnquiry } from "@/lib/enquiry-context";
-import { EASE_PREMIUM } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 const links = [
   { href: "#about", label: "About" },
@@ -81,8 +80,10 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setOpen(!open)}
+            onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
             className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/10 lg:hidden"
           >
             {open ? (
@@ -99,15 +100,16 @@ export default function Navbar() {
           pass on every frame — on a mid-range phone that is the difference
           between the menu snapping open and visibly stuttering. The header is
           `fixed`, so an instant height change moves nothing else on the page. */}
-      <AnimatePresence>
+      <div
+        id="mobile-menu"
+        className={cn(
+          "container-px mx-auto max-w-7xl transition-[opacity,transform] duration-[180ms] ease-premium lg:hidden",
+          open ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
+        )}
+        aria-hidden={!open}
+      >
         {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.18, ease: EASE_PREMIUM }}
-            className="container-px mx-auto max-w-7xl lg:hidden"
-          >
+          <div>
             <div className="nav-glass mt-2 rounded-2xl border border-slate-200 p-4 shadow-xl">
               {links.map((link) => (
                 <a
@@ -140,9 +142,9 @@ export default function Navbar() {
                 </button>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+      </div>
     </header>
   );
 }
