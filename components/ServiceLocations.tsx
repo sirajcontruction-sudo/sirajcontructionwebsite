@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { serviceLocations } from "@/data/locations";
+import { DURATION, EASE_PREMIUM, hoverLift, staggerDelay } from "@/lib/motion";
 
 export default function ServiceLocations() {
   return (
@@ -44,16 +45,16 @@ export default function ServiceLocations() {
           {serviceLocations.map((loc, i) => (
             <motion.div
               key={loc.id}
-              initial={{ opacity: 0, y: 26 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              whileHover={{ y: -8 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: DURATION.card, delay: staggerDelay(i, 0.06), ease: EASE_PREMIUM }}
+              whileHover={hoverLift}
               className="group card-premium relative overflow-hidden p-7"
             >
-              <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-royal-50 transition-transform duration-500 group-hover:scale-150" />
+              <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-royal-50 transition-transform duration-[240ms] ease-premium group-hover:scale-[1.4]" />
               <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-royal-gradient shadow-glow-sky/20">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-royal-gradient">
                   <loc.icon className="h-5 w-5 text-white" />
                 </div>
                 <h3 className="mt-5 font-display text-xl font-semibold text-navy">

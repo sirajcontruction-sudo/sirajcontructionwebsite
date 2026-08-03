@@ -3,15 +3,17 @@
 import { motion } from "framer-motion";
 import { Navigation, MapPin } from "lucide-react";
 import { SITE } from "@/lib/utils";
+import { DURATION, EASE_PREMIUM } from "@/lib/motion";
 
 export default function GoogleMap() {
   return (
     <section className="relative bg-white pb-24">
       <div className="container-px mx-auto max-w-7xl">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
           className="overflow-hidden rounded-3xl border border-black/5 shadow-glass"
         >
           <div className="grid lg:grid-cols-[1fr_1.6fr]">
@@ -35,7 +37,7 @@ export default function GoogleMap() {
                 href={SITE.mapDirectionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-royal-800 transition-transform hover:scale-[1.03]"
+                className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-royal-800 transition-transform duration-[180ms] ease-premium hover:scale-[1.03] active:scale-[0.98]"
               >
                 <Navigation className="h-4 w-4" />
                 Get Directions

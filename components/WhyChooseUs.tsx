@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { BadgeIndianRupee, Clock, FileCheck2, Wrench } from "lucide-react";
+import { DURATION, EASE_PREMIUM, hoverLift, staggerDelay } from "@/lib/motion";
 
 const reasons = [
   { icon: BadgeIndianRupee, title: "Fixed, Transparent Pricing", desc: "Every package is itemised down to the brand and grade — the quoted rate is the final rate." },
@@ -26,12 +27,12 @@ export default function WhyChooseUs() {
           {reasons.map((r, i) => (
             <motion.div
               key={r.title}
-              initial={{ opacity: 0, y: 26 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              whileHover={{ y: -6 }}
-              className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-sm"
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: DURATION.card, delay: staggerDelay(i, 0.06), ease: EASE_PREMIUM }}
+              whileHover={hoverLift}
+              className="rounded-3xl border border-white/10 bg-white/[0.055] p-6"
             >
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-gradient">
                 <r.icon className="h-5 w-5 text-navy" />

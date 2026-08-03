@@ -6,6 +6,7 @@ import { Sparkles } from "lucide-react";
 import type { ConstructionTier } from "@/data/packages";
 import { useEnquiry } from "@/lib/enquiry-context";
 import { cn } from "@/lib/utils";
+import { DURATION, EASE_PREMIUM, hoverLift, staggerDelay } from "@/lib/motion";
 
 interface PackageHeaderCardProps {
   tier: ConstructionTier;
@@ -23,11 +24,11 @@ function PackageHeaderCard({ tier, index }: PackageHeaderCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay: index * 0.08 }}
-      whileHover={{ y: -6 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: DURATION.card, delay: staggerDelay(index, 0.06), ease: EASE_PREMIUM }}
+      whileHover={hoverLift}
       className="relative flex h-full flex-col"
     >
       {tier.popular && (
@@ -39,7 +40,7 @@ function PackageHeaderCard({ tier, index }: PackageHeaderCardProps) {
 
       <div
         className={cn(
-          "flex h-full flex-col rounded-3xl border bg-white p-7 shadow-glass transition-shadow duration-300 hover:shadow-premium",
+          "shadow-hover-premium flex h-full flex-col rounded-3xl border bg-white p-7 shadow-glass",
           tier.popular ? "border-royal-300 ring-1 ring-royal-100" : "border-black/5"
         )}
       >

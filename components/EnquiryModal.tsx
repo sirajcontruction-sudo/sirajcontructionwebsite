@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { X, Send } from "lucide-react";
-import { useEnquiry } from "@/lib/enquiry-context";
+import { useEnquiry, useEnquiryState } from "@/lib/enquiry-context";
 import { SITE } from "@/lib/utils";
 
 type FormValues = {
@@ -14,7 +14,8 @@ type FormValues = {
 };
 
 export default function EnquiryModal() {
-  const { isOpen, presetSubject, closeEnquiry } = useEnquiry();
+  const { isOpen, presetSubject } = useEnquiryState();
+  const { closeEnquiry } = useEnquiry();
   const {
     register,
     handleSubmit,
@@ -67,10 +68,10 @@ Thank you for contacting SRAJ Construction & Interior.`;
             className="absolute inset-0 bg-navy/70 backdrop-blur-sm"
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 20 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, scale: 0.96, y: 12 }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
             className="relative w-full max-w-md rounded-3xl bg-white p-8 shadow-premium"
           >
             <button

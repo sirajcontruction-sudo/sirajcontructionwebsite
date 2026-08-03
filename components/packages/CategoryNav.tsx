@@ -42,13 +42,15 @@ export default function CategoryNav({ categories, activeId, onSelect }: Category
                     transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                   />
                 )}
+                {/* No truncation — category names must stay fully readable,
+                    so a long one (e.g. "What's Not Included") wraps instead. */}
                 <span className="relative z-10 flex min-w-0 flex-1 items-center gap-3">
                   <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-                  <span className="truncate">{category.title}</span>
+                  <span className="min-w-0 leading-snug">{category.title}</span>
                 </span>
                 <ChevronRight
                   className={cn(
-                    "relative z-10 h-4 w-4 shrink-0 transition-all duration-200",
+                    "relative z-10 h-4 w-4 shrink-0 transition-[opacity,transform] duration-200 ease-premium",
                     isActive ? "translate-x-0 opacity-100" : "-translate-x-1 opacity-0"
                   )}
                   aria-hidden="true"

@@ -70,18 +70,32 @@ export default function PackageCarousel({ tiers, activeCategoryId }: PackageCaro
         ))}
       </div>
 
-      <div className="mt-5 flex items-center justify-center gap-2">
+      {/* The indicator previously animated each dot's `width` between 6px and
+          24px. That runs layout on every frame, and because the row is
+          centred, the whole strip re-centred as the active dot grew — a
+          visible horizontal shift on every swipe.
+
+          Each dot now occupies a fixed 24px slot and the pill inside is
+          scaled with `transform`, so the row's geometry never changes: no
+          layout, no shift, and the animation stays on the compositor. The
+          fixed slot doubles as a 24x24 touch target, up from 6x6. */}
+      <div className="mt-5 flex items-center justify-center gap-1">
         {tiers.map((tier, i) => (
           <button
             key={tier.id}
             type="button"
             onClick={() => scrollToIndex(i)}
             aria-label={`Go to ${tier.name} package`}
-            className={cn(
-              "h-1.5 rounded-full transition-all",
-              i === activeIndex ? "w-6 bg-royal-700" : "w-1.5 bg-royal-200"
-            )}
-          />
+            aria-current={i === activeIndex ? "true" : undefined}
+            className="flex h-6 w-6 shrink-0 items-center justify-center"
+          >
+            <span
+              className={cn(
+                "h-1.5 w-6 origin-center rounded-full transition-[transform,background-color] duration-200 ease-premium",
+                i === activeIndex ? "scale-x-100 bg-royal-700" : "scale-x-[0.25] bg-royal-200"
+              )}
+            />
+          </button>
         ))}
       </div>
     </div>

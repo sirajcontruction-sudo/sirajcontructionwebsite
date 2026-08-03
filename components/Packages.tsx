@@ -4,11 +4,16 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { constructionTiers } from "@/data/packages";
 import PackageHeaderCard from "@/components/packages/PackageHeaderCard";
-import PackageFeaturePanel from "@/components/packages/PackageFeaturePanel";
+import PackageComparisonGrid from "@/components/packages/PackageComparisonGrid";
 import PackageCarousel from "@/components/packages/PackageCarousel";
 import CategoryNav from "@/components/packages/CategoryNav";
 import CategoryTabBar from "@/components/packages/CategoryTabBar";
 import { packageCategories, DEFAULT_CATEGORY_ID } from "@/components/packages/categories";
+
+// Tablet shows two packages side by side, so the four tiers are split into
+// two aligned comparison blocks. Hoisted to module scope so the slices keep a
+// stable identity between renders.
+const TABLET_TIER_GROUPS = [constructionTiers.slice(0, 2), constructionTiers.slice(2)];
 
 export default function Packages() {
   // Single shared source of truth — every package panel, the desktop
@@ -68,7 +73,7 @@ export default function Packages() {
         </div>
 
         {/* Compare packages — synced category nav + comparison grid */}
-        <div className="mt-16 lg:grid lg:grid-cols-[180px_1fr] lg:items-start lg:gap-8">
+        <div className="mt-16 lg:grid lg:grid-cols-[204px_1fr] lg:items-start lg:gap-8">
           <CategoryNav
             categories={packageCategories}
             activeId={activeCategoryId}
@@ -82,15 +87,25 @@ export default function Packages() {
               onSelect={setActiveCategoryId}
             />
 
-            {/* Tablet: 2-up grid. Desktop (lg+): full 4-up row. */}
-            <div className="hidden md:grid md:grid-cols-2 md:gap-5 lg:grid-cols-4 lg:items-stretch lg:gap-3">
-              {constructionTiers.map((tier) => (
-                <PackageFeaturePanel
-                  key={tier.id}
-                  tier={tier}
+            {/* Tablet: two aligned 2-up blocks. */}
+            <div className="hidden space-y-5 md:block lg:hidden">
+              {TABLET_TIER_GROUPS.map((group, i) => (
+                <PackageComparisonGrid
+                  key={i}
+                  tiers={group}
                   activeCategoryId={activeCategoryId}
+                  gapClassName="gap-x-5"
                 />
               ))}
+            </div>
+
+            {/* Desktop (lg+): all four packages in one row-aligned grid. */}
+            <div className="hidden lg:block">
+              <PackageComparisonGrid
+                tiers={constructionTiers}
+                activeCategoryId={activeCategoryId}
+                gapClassName="gap-x-3"
+              />
             </div>
 
             {/* Mobile: swipeable single-card carousel */}

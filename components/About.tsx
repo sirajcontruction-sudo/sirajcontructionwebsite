@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Award, Users, Compass, HeartHandshake } from "lucide-react";
+import { DURATION, EASE_PREMIUM, hoverLift, staggerDelay } from "@/lib/motion";
 
 const pillars = [
   { icon: Compass, title: "Precise Planning", desc: "Every project begins with detailed structural and architectural drawings before a single brick is laid." },
@@ -16,10 +17,10 @@ export default function About() {
       <div className="container-px mx-auto max-w-7xl">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
           <motion.div
-            initial={{ opacity: 0, x: -24 }}
+            initial={{ opacity: 0, x: -16 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
           >
             <span className="eyebrow">Who We Are</span>
             <h2 className="heading-display mt-5 text-3xl sm:text-4xl lg:text-[2.75rem]">
@@ -57,20 +58,20 @@ export default function About() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 24 }}
+            initial={{ opacity: 0, x: 16 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
             className="grid grid-cols-1 gap-5 sm:grid-cols-2"
           >
             {pillars.map((p, i) => (
               <motion.div
                 key={p.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                whileHover={{ y: -6 }}
+                transition={{ duration: DURATION.card, delay: staggerDelay(i, 0.06), ease: EASE_PREMIUM }}
+                whileHover={hoverLift}
                 className="card-premium p-6"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-royal-gradient">

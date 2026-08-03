@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { services } from "@/data/services";
+import { DURATION, EASE_PREMIUM, hoverLift, staggerDelay } from "@/lib/motion";
 
 export default function Services() {
   return (
@@ -32,16 +33,17 @@ export default function Services() {
           {services.map((s, i) => (
             <motion.div
               key={s.id}
-              initial={{ opacity: 0, y: 26 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
-              whileHover={{ y: -8 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: DURATION.card, delay: staggerDelay(i % 3, 0.06), ease: EASE_PREMIUM }}
+              whileHover={hoverLift}
+              whileTap={{ scale: 0.99 }}
               className="group card-premium relative overflow-hidden p-7"
             >
-              <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-royal-50 transition-transform duration-500 group-hover:scale-150" />
+              <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-royal-50 transition-transform duration-[240ms] ease-premium group-hover:scale-[1.4]" />
               <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-royal-gradient shadow-glow-sky/20">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-royal-gradient">
                   <s.icon className="h-5 w-5 text-white" />
                 </div>
                 <h3 className="mt-5 font-display text-lg font-semibold text-navy">{s.title}</h3>
@@ -56,9 +58,10 @@ export default function Services() {
                 </ul>
                 <a
                   href="#contact"
-                  className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-royal-700 transition-all group-hover:gap-2"
+                  className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-royal-700"
                 >
-                  Enquire <ArrowUpRight className="h-4 w-4" />
+                  Enquire
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-200 ease-premium group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </a>
               </div>
             </motion.div>

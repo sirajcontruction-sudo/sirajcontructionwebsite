@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Phone } from "lucide-react";
 import { SITE } from "@/lib/utils";
 import { useEnquiry } from "@/lib/enquiry-context";
+import { EASE_PREMIUM } from "@/lib/motion";
 
 const links = [
   { href: "#about", label: "About" },
@@ -26,16 +27,16 @@ export default function Navbar() {
         <div className="nav-glass flex items-center justify-between rounded-2xl border border-slate-200 px-4 py-2.5 shadow-xl">
           {/* Logo */}
           <a href="#top" className="flex items-center gap-2.5">
-            <div className="relative h-11 w-11 shrink-0">
-              <Image
-                src="/logo.png"
-                alt="SRAJ Construction logo"
-                fill
-                sizes="44px"
-                className="object-contain"
-                priority
-              />
-            </div>
+            <Image
+              src="/logo.png"
+              alt="SRAJ Construction logo"
+              width={44}
+              height={49}
+              sizes="44px"
+              quality={90}
+              priority
+              className="h-[49px] w-11 shrink-0 select-none"
+            />
 
             <div className="leading-tight">
               <p className="font-display text-base font-semibold text-navy">
@@ -53,7 +54,7 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-ink/80 transition-colors hover:text-royal-700"
+                className="text-sm font-medium text-ink/80 transition-colors duration-150 ease-premium hover:text-royal-700"
               >
                 {link.label}
               </a>
@@ -93,15 +94,19 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu.
+          Opacity + transform only. Animating `height: auto` forces a layout
+          pass on every frame — on a mid-range phone that is the difference
+          between the menu snapping open and visibly stuttering. The header is
+          `fixed`, so an instant height change moves nothing else on the page. */}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="container-px mx-auto max-w-7xl overflow-hidden lg:hidden"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18, ease: EASE_PREMIUM }}
+            className="container-px mx-auto max-w-7xl lg:hidden"
           >
             <div className="nav-glass mt-2 rounded-2xl border border-slate-200 p-4 shadow-xl">
               {links.map((link) => (
@@ -109,7 +114,7 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-xl px-3 py-3 text-sm font-medium text-ink hover:bg-royal-50 hover:text-royal-700"
+                  className="block rounded-xl px-3 py-3 text-sm font-medium text-ink transition-colors duration-150 ease-premium hover:bg-royal-50 hover:text-royal-700 active:bg-royal-50"
                 >
                   {link.label}
                 </a>

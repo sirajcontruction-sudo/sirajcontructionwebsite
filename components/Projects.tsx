@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ImageOff, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DURATION, EASE_PREMIUM, hoverLift } from "@/lib/motion";
 
 type Category = "Construction" | "Interior";
 
@@ -38,15 +39,38 @@ const interiorProjects: Project[] = [
 
 const INTERIOR_PREVIEW_COUNT = 6;
 
+/** Next's default allowed quality. Kept in one place so the preload URL
+ *  below and the <Image> components below it can never drift apart — a
+ *  mismatch would silently make every preload a cache miss. */
+const IMAGE_QUALITY = 75; // must appear in `images.qualities` in next.config.mjs
+
 /* ---------------- Preload cache (module-level, survives re-renders) ---------------- */
 
 const preloadedUrls = new Set<string>();
 
-function preloadImage(src: string) {
-  if (!src || preloadedUrls.has(src)) return;
-  preloadedUrls.add(src);
+/**
+ * Warms the browser cache for an image.
+ *
+ * The critical detail is `/_next/image?...`. This used to point `new
+ * Image().src` straight at the raw file in /public, which bypasses Next's
+ * optimizer completely — so every "preload" pulled the full-size original
+ * rather than the resized AVIF/WebP the page actually renders. With twelve
+ * ~3.5MB source photos that was tens of megabytes fetched on mount, on the
+ * main thread, competing with hydration. It is also wasted work: the
+ * browser caches the raw URL, and the <Image> component then requests a
+ * completely different URL, so nothing was reused.
+ *
+ * Requesting the optimizer URL with the same width/quality the grid uses
+ * means the preload populates the exact cache entry the render needs.
+ */
+function preloadImage(src: string, width = 640) {
+  if (!src || typeof window === "undefined") return;
+  const url = `/_next/image?url=${encodeURIComponent(src)}&w=${width}&q=${IMAGE_QUALITY}`;
+  if (preloadedUrls.has(url)) return;
+  preloadedUrls.add(url);
   const img = new window.Image();
-  img.src = src;
+  img.decoding = "async";
+  img.src = url;
 }
 
 /* ---------------- Image with fallback ---------------- */
@@ -85,7 +109,7 @@ const ProjectImage = memo(function ProjectImage({
       sizes={sizes}
       priority={priority}
       loading={priority ? "eager" : "lazy"}
-      quality={80}
+      quality={IMAGE_QUALITY}
       className={className}
       onError={() => setErrored(true)}
       onLoad={onLoad}
@@ -108,13 +132,19 @@ const ProjectCard = memo(function ProjectCard({
     <motion.button
       type="button"
       onClick={onOpen}
-      onMouseEnter={() => preloadImage(project.image)}
-      layout
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.4 }}
-      whileHover={{ y: -6 }}
+      onMouseEnter={() => preloadImage(project.image, 1200)}
+      // `layout` removed deliberately. A layout animation makes framer
+      // measure this element's box on every frame of every animation it
+      // participates in — including the hover lift — which forces a
+      // synchronous style+layout pass per frame per card. With 6-12 cards
+      // that is the single most expensive thing on this page. The reveal
+      // and hover below are pure transform/opacity and need no measurement.
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
+      whileHover={hoverLift}
+      whileTap={{ scale: 0.985 }}
       className="group relative block w-full overflow-hidden rounded-3xl text-left shadow-glass focus:outline-none focus-visible:ring-2 focus-visible:ring-royal-600"
     >
       <div className="relative h-72 w-full overflow-hidden sm:h-80">
@@ -123,10 +153,15 @@ const ProjectCard = memo(function ProjectCard({
           alt={project.title}
           priority={priority}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          className="object-cover transition-transform duration-300 ease-premium group-hover:scale-[1.06]"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/30 to-transparent transition-opacity duration-500 group-hover:from-navy/95" />
+        {/* Static gradient. It previously carried `transition-opacity` plus a
+            `group-hover:from-navy/95` colour change — but opacity never
+            changed, and gradient colour stops are not interpolable by CSS
+            transitions, so the declaration animated nothing while still
+            forcing a repaint of the full card area on hover. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/30 to-transparent" />
 
         <div className="absolute left-4 top-4">
           <span className="rounded-full bg-white/15 px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur">
@@ -140,7 +175,10 @@ const ProjectCard = memo(function ProjectCard({
           <span
             className={cn(
               "w-fit rounded-full border border-white/30 px-4 py-2 text-xs font-semibold text-white",
-              "opacity-0 translate-y-2 transition-all duration-300",
+              // Explicit property list instead of `transition-all`, which
+              // makes the browser watch every animatable property for change.
+              "opacity-0 translate-y-2 duration-200 ease-premium",
+              "transition-[opacity,transform,background-color,color]",
               "group-hover:opacity-100 group-hover:translate-y-0",
               "group-hover:bg-white group-hover:text-navy"
             )}
@@ -183,7 +221,7 @@ const Lightbox = memo(function Lightbox({
     const prevIdx = index === 0 ? gallery.length - 1 : index - 1;
     const nextIdx = index === gallery.length - 1 ? 0 : index + 1;
     [gallery[index], gallery[prevIdx], gallery[nextIdx]].forEach((p) => {
-      if (p) preloadImage(p.image);
+      if (p) preloadImage(p.image, 1200);
     });
   }, [gallery, index]);
 
@@ -317,7 +355,7 @@ const Lightbox = memo(function Lightbox({
                 alt=""
                 width={800}
                 height={600}
-                quality={80}
+                quality={IMAGE_QUALITY}
                 onLoad={() => markLoaded(p.image)}
               />
             ))}
@@ -339,11 +377,15 @@ export default function Projects() {
     [showAllInterior]
   );
 
-  // Warm the cache for the first few images of each gallery as soon as the section mounts
-  useEffect(() => {
-    constructionProjects.forEach((p) => preloadImage(p.image));
-    interiorProjects.slice(0, INTERIOR_PREVIEW_COUNT).forEach((p) => preloadImage(p.image));
-  }, []);
+  // Deliberately no mount-time preloading.
+  //
+  // This used to eagerly fetch nine images the moment the section mounted.
+  // Every one of those is already rendered by an <Image> in the grid below
+  // with `loading="lazy"`, so the preload duplicated work the browser was
+  // going to do anyway — except it ran immediately, during hydration, and
+  // ignored whether the section was even on screen. Lazy loading plus the
+  // hover/lightbox preloads below cover every real navigation path without
+  // competing with first paint.
 
   const openLightbox = useCallback((gallery: Project[], project: Project) => {
     const idx = gallery.findIndex((p) => p.id === project.id);
@@ -380,7 +422,9 @@ export default function Projects() {
         {/* Construction Section */}
         <div className="mt-14">
           <h3 className="font-display text-2xl font-semibold text-navy">Construction</h3>
-          <motion.div layout className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Plain div: the grid is a fixed list, so there was nothing for a
+              `layout` animation to animate — it only added measurement cost. */}
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {constructionProjects.map((p, i) => (
               <ProjectCard
                 key={p.id}
@@ -389,31 +433,33 @@ export default function Projects() {
                 onOpen={() => openLightbox(constructionProjects, p)}
               />
             ))}
-          </motion.div>
+          </div>
         </div>
 
         {/* Interior Section */}
         <div className="mt-16">
           <h3 className="font-display text-2xl font-semibold text-navy">Interior</h3>
-          <motion.div layout className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <AnimatePresence mode="popLayout">
-              {visibleInterior.map((p, i) => (
-                <ProjectCard
-                  key={p.id}
-                  project={p}
-                  priority={i === 0}
-                  onOpen={() => openLightbox(interiorProjects, p)}
-                />
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          {/* "View More" only ever appends rows — nothing reflows position —
+              so `popLayout` was paying for full FLIP measurement of every
+              card to animate a change that doesn't move anything. The new
+              cards animate themselves in via their own reveal transition. */}
+          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {visibleInterior.map((p, i) => (
+              <ProjectCard
+                key={p.id}
+                project={p}
+                priority={i === 0}
+                onOpen={() => openLightbox(interiorProjects, p)}
+              />
+            ))}
+          </div>
 
           {interiorProjects.length > INTERIOR_PREVIEW_COUNT && (
             <div className="mt-10 flex justify-center">
               <button
                 type="button"
                 onClick={() => setShowAllInterior((prev) => !prev)}
-                className="rounded-full bg-royal-gradient px-8 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-300 hover:scale-105"
+                className="rounded-full bg-royal-gradient px-8 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-[180ms] ease-premium hover:scale-[1.03] active:scale-[0.98]"
               >
                 {showAllInterior ? "Show Less" : "View More"}
               </button>

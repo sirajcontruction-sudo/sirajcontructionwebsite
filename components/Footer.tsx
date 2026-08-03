@@ -27,16 +27,16 @@ export default function Footer() {
         <div className="grid gap-12 pb-14 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2.5">
-              <div className="relative h-10 w-10">
-                <Image
-                  src="/logo.png"
-                  alt="SRAJ Construction & Interior logo"
-                  fill
-                  sizes="40px"
-                  loading="lazy"
-                  className="object-contain"
-                />
-              </div>
+              <Image
+                src="/logo.png"
+                alt="SRAJ Construction & Interior logo"
+                width={40}
+                height={44}
+                sizes="40px"
+                quality={90}
+                loading="lazy"
+                className="h-11 w-10 select-none"
+              />
               <div>
                 <p className="font-display text-base font-semibold text-white">SRAJ</p>
                 <p className="text-[10px] uppercase tracking-[0.14em] text-white/50">Construction &amp; Interior</p>

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { Mail, MapPin, Phone, Send, CheckCircle2 } from "lucide-react";
 import { SITE } from "@/lib/utils";
+import { DURATION, EASE_PREMIUM } from "@/lib/motion";
 
 type FormValues = {
   name: string;
@@ -72,9 +73,10 @@ ${data.message || "-"}
 
         <div className="mt-14 grid gap-8 lg:grid-cols-[0.85fr_1.15fr]">
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -16 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
             className="flex flex-col gap-5"
           >
             <div className="card-premium flex items-start gap-4 p-6">
@@ -121,9 +123,10 @@ ${data.message || "-"}
           </motion.div>
 
           <motion.form
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 16 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
             onSubmit={handleSubmit(onSubmit)}
             className="card-premium space-y-5 p-8"
           >

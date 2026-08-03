@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import LenisProvider from "@/lib/lenis-provider";
+import MotionProvider from "@/lib/motion-provider";
 import { EnquiryProvider } from "@/lib/enquiry-context";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -67,18 +68,27 @@ export const metadata: Metadata = {
     description:
       `Civil contracting, construction, architecture, interior design, turnkey construction and renovation across ${serviceAreaAmpersand}.`,
     siteName: SITE.name,
-    images: [{ url: "/logo.png", width: 520, height: 575, alt: SITE.name }],
+    // Crawlers fetch this raw, bypassing next/image — so it points at the
+    // pre-sized square icon rather than the 4160px master.
+    images: [{ url: "/favicon-512.png", width: 512, height: 512, alt: SITE.name }],
   },
   twitter: {
     card: "summary",
     title: `${SITE.name} | Premium Construction & Interiors in ${serviceAreaAmpersand}`,
     description:
       `Civil contracting, construction, architecture, interior design, turnkey construction and renovation across ${serviceAreaAmpersand}.`,
-    images: ["/logo.png"],
+    images: ["/favicon-512.png"],
   },
+  // Dedicated square icons rather than the full logo. Browsers fetch the
+  // favicon eagerly and unoptimised — pointing it at the main logo meant
+  // downloading the whole artwork to render a 16px tab icon.
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: [
+      { url: "/favicon.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/favicon-192.png", sizes: "192x192", type: "image/png" }],
   },
   robots: {
     index: true,
@@ -125,16 +135,18 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        <LenisProvider>
-          <EnquiryProvider>
-            <ScrollProgress />
-            <Navbar />
-            {children}
-            <Footer />
-            <FloatingButtons />
-            <EnquiryModal />
-          </EnquiryProvider>
-        </LenisProvider>
+        <MotionProvider>
+          <LenisProvider>
+            <EnquiryProvider>
+              <ScrollProgress />
+              <Navbar />
+              {children}
+              <Footer />
+              <FloatingButtons />
+              <EnquiryModal />
+            </EnquiryProvider>
+          </LenisProvider>
+        </MotionProvider>
       </body>
     </html>
   );

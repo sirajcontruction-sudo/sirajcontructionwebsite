@@ -5,14 +5,20 @@
 :root {
   --font-display: "Fraunces", serif;
   --font-sans: "Inter", system-ui, sans-serif;
-}
 
-* {
-  scroll-behavior: auto;
+  /* Single premium easing curve, shared by every CSS transition below so
+     hover/press feedback reads identically across the whole site. Fast
+     departure, soft settle — the same shape framer-motion uses for its
+     enter animations. */
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 html {
+  /* Native smooth-scroll stays off: Lenis owns wheel scrolling on desktop
+     and anchor jumps are handled programmatically. */
   scroll-behavior: auto;
+  /* Stops iOS Safari inflating font sizes in landscape. */
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -20,7 +26,31 @@ body {
   color: #1f2937;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* `clip` instead of `hidden`: both prevent horizontal scroll, but `hidden`
+     makes the body a scroll container, which silently breaks `position:
+     sticky` on descendants and forces the browser to keep an extra scroll
+     box in sync. `clip` has neither cost. */
+  overflow-x: clip;
+}
+
+/* Removes the ~300ms synthetic click delay and the grey flash on tap, which
+   is most of what makes a mobile site feel unresponsive to touch. */
+a,
+button,
+[role="button"],
+input,
+select,
+textarea,
+summary {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Keyboard users must keep a visible focus ring even though tap highlight
+   is suppressed above. */
+:focus-visible {
+  outline: 2px solid #2447e6;
+  outline-offset: 2px;
 }
 
 ::selection {
@@ -56,12 +86,9 @@ body {
     }
   }
 
-  .glass {
-    @apply bg-white/70 backdrop-blur-xl border border-white/60;
-  }
-  .glass-dark {
-    @apply bg-navy/60 backdrop-blur-xl border border-white/10;
-  }
+  /* `.glass` removed — it was only ever used by the two hero floating badges,
+     which are gone. It carried `backdrop-blur-xl`, the most expensive filter
+     in the stylesheet. */
   .container-px {
     @apply px-6 sm:px-8 lg:px-12;
   }
@@ -71,28 +98,74 @@ body {
   .eyebrow {
     @apply inline-flex items-center gap-2 rounded-full border border-royal-200 bg-royal-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-royal-700;
   }
+
+  /* Buttons transition only compositor-friendly properties. `transition-all`
+     was previously making the browser watch every animatable property on
+     these elements for changes on each frame. */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-royal-gradient px-7 py-3.5 text-sm font-semibold text-white shadow-premium transition-transform duration-300 hover:scale-[1.03] active:scale-[0.98];
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-royal-gradient px-7 py-3.5 text-sm font-semibold text-white shadow-premium;
+    transition: transform 180ms var(--ease-premium);
   }
+  .btn-primary:hover {
+    transform: scale(1.03);
+  }
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-7 py-3.5 text-sm font-semibold text-ink transition-all duration-300 hover:border-royal-700 hover:text-royal-700;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-7 py-3.5 text-sm font-semibold text-ink hover:border-royal-700 hover:text-royal-700;
+    transition: color 180ms var(--ease-premium), border-color 180ms var(--ease-premium);
   }
+
   .btn-ghost-light {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white/20;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white hover:bg-white/20;
+    transition: background-color 180ms var(--ease-premium);
   }
+
+  /* No transition at all. Transform is excluded because framer-motion's
+     `whileHover` writes transform inline every frame, and a CSS transition on
+     the same property makes the browser re-interpolate each of those writes
+     over its own duration — the two fight and produce a laggy, floaty hover.
+     Shadow and border-color are excluded because an audit found that not one
+     of the nine `.card-premium` call sites ever changes either on hover, so
+     the transition never fired — it only cost the style engine work watching
+     for a change that never came. */
   .card-premium {
-    @apply rounded-3xl border border-black/5 bg-white shadow-glass transition-all duration-500;
+    @apply rounded-3xl border border-black/5 bg-white shadow-glass;
   }
+
+  /* Hover elevation without animating box-shadow.
+     Interpolating a shadow means re-painting the blurred spread on every
+     frame. Instead the stronger shadow is painted once onto a pseudo-element
+     and cross-faded with `opacity`, which the compositor handles for free. */
+  .shadow-hover-premium {
+    position: relative;
+  }
+  .shadow-hover-premium::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 20px 60px -15px rgba(10, 18, 51, 0.25);
+    opacity: 0;
+    transition: opacity 220ms var(--ease-premium);
+    pointer-events: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .shadow-hover-premium:hover::after {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .shadow-hover-premium::after {
+      transition: none;
+    }
+  }
+
   .heading-display {
     @apply font-display font-medium tracking-tight text-navy;
   }
-}
-
-.text-gradient-royal {
-  background: linear-gradient(135deg, #1e40af, #38bdf8);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 .mesh-bg {
@@ -100,16 +173,221 @@ body {
   background-image: radial-gradient(at 20% 20%, rgba(56,189,248,0.14) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(30,64,175,0.18) 0px, transparent 50%), radial-gradient(at 50% 100%, rgba(10,18,51,0.10) 0px, transparent 50%);
 }
 
+/* Gradient headline fill. The `shimmer` keyframe this used to reference was
+   never emitted by Tailwind (no `animate-shimmer` utility appears in any
+   component), so the animation never ran and the text has always rendered
+   as a static gradient. Kept static deliberately: an infinite
+   background-position animation on the LCP heading repaints the text layer
+   every frame for the entire session. */
 .shimmer-text {
   background: linear-gradient(90deg, #ffffff 0%, #7dd3fc 50%, #ffffff 100%);
-  background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: shimmer 3s linear infinite;
 }
 
-/* Loading screen */
-.loader-mask {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+/* ---------------------------------------------------------------------------
+   Hero logo idle float — the only continuous animation on the site.
+
+   It runs on the logo itself rather than on the whole showcase card. The card
+   is 384x496 CSS px; the logo is 200x221. Compositing the smaller of the two
+   every frame is ~4.3x less pixel area for the GPU to move, for motion the eye
+   reads as more deliberate because it is attached to the focal object.
+
+   `translate3d` keeps the animation on the compositor thread: no layout, no
+   paint, no main-thread work per frame. `will-change: transform` is declared
+   here (rather than toggled from JS) because this animation is infinite — the
+   element is always animating, so the hint is always accurate. It is released
+   again under reduced-motion below, where no layer is needed.
+
+   TRAVEL DISTANCE — the one number to tune here.
+
+   This ran at 3px initially, which is ~1.1px per second over the cycle. That
+   is below the speed at which the eye registers drift, so it read as
+   completely static. 12px is gentle but unmistakably alive.
+
+   Worth knowing before dialling it back down: distance has NO bearing on
+   cost. Moving an element 3px or 30px is the same single compositor
+   operation on the same already-promoted layer — identical GPU work,
+   identical frame budget. Amplitude is purely an aesthetic choice.
+--------------------------------------------------------------------------- */
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0);
+  }
+}
+
+/* Coarse pointers (tablets in landscape still reach the lg breakpoint) get
+   half the travel — subtler motion suits a hand-held screen. Declared as a
+   second keyframe set rather than a custom property inside the first: an
+   unregistered custom property in a keyframe value is substituted at computed
+   -value time and interpolates unreliably in older Safari. */
+@keyframes logo-float-subtle {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+.logo-float {
+  animation: logo-float 5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (pointer: coarse) {
+  .logo-float {
+    animation-name: logo-float-subtle;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-float {
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Hero logo ambient glow.
+
+   A single painted radial gradient whose `opacity` breathes. Nothing is
+   blurred and no shadow is interpolated: the gradient is rasterised once when
+   the layer is created, and every frame after that is the compositor changing
+   one alpha value on an existing texture. That is the cheapest continuous
+   effect available in a browser — it costs the same whether the glow is 100px
+   or 1000px across.
+
+   The colour stops are the requested ramp (0.35 / 0.18 / 0.08 -> transparent)
+   divided through by 0.35, so the peak stop sits at alpha 1.0 and the element's
+   own opacity carries the real intensity. That is what lets the keyframes below
+   read as literal 20% and 35% — the numbers from the brief — instead of being
+   multiplied by a second alpha hidden in the gradient.
+
+   #2563EB is within a couple of points of the palette's royal-600 (#2447E6),
+   so it reads as the brand blue rather than a separate accent.
+--------------------------------------------------------------------------- */
+@keyframes logo-glow-breathe {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.logo-glow {
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.9) 0%,
+    rgba(37, 99, 235, 0.55) 35%,
+    rgba(37, 99, 235, 0.22) 60%,
+    transparent 78%
+  );
+  opacity: 0.22;
+  animation: logo-glow-breathe 5.5s ease-in-out infinite;
+  will-change: opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-glow {
+    animation: none;
+    /* Midpoint of the breathing range — the glow stays, it just stops moving. */
+    opacity: 0.32;
+    will-change: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Shape-tracing halo.
+
+   The radial pool above lights the area behind the mark; this lights the mark
+   itself. `drop-shadow` reads the image's alpha channel, so the glow follows
+   the crescent and the tower edges exactly rather than sitting behind them as
+   a generic disc — that silhouette-hugging quality is the whole character of
+   the reference.
+
+   Three stacked shadows give a tight bright core falling off into a wide
+   ambient wash. The filter is STATIC: it is rasterised once when the layer is
+   built and never re-evaluated. Only `opacity` animates, which the compositor
+   applies to the finished texture — so this never costs a per-frame blur.
+
+   It is applied to a duplicate of the logo sitting behind the real one. The
+   visible copy stays completely filter-free, because a filter forces an
+   offscreen rasterise-and-composite pass, and that is what was softening the
+   artwork before.
+--------------------------------------------------------------------------- */
+@keyframes logo-halo-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.logo-halo {
+  filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.95))
+    drop-shadow(0 0 16px rgba(56, 189, 248, 0.6))
+    drop-shadow(0 0 40px rgba(37, 99, 235, 0.55));
+  opacity: 0.55;
+  animation: logo-halo-breathe 5.5s ease-in-out infinite;
+  will-change: opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-halo {
+    animation: none;
+    opacity: 0.75;
+    will-change: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Starfield.
+
+   Static texture, not a particle system: one painted background of hairline
+   radial gradients, rasterised once with the card and never touched again.
+   No JS, no elements, no per-frame work. Kept faint so it reads as depth
+   rather than decoration.
+--------------------------------------------------------------------------- */
+.hero-starfield {
+  background-image: radial-gradient(1px 1px at 12% 16%, rgba(255, 255, 255, 0.55), transparent),
+    radial-gradient(1px 1px at 27% 9%, rgba(186, 230, 253, 0.45), transparent),
+    radial-gradient(1px 1px at 41% 22%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 68% 12%, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 84% 21%, rgba(186, 230, 253, 0.4), transparent),
+    radial-gradient(1px 1px at 8% 43%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(1px 1px at 92% 47%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 18% 63%, rgba(186, 230, 253, 0.45), transparent),
+    radial-gradient(1px 1px at 33% 78%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1px 1px at 55% 88%, rgba(255, 255, 255, 0.45), transparent),
+    radial-gradient(1px 1px at 74% 71%, rgba(186, 230, 253, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 88% 83%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1px 1px at 47% 38%, rgba(255, 255, 255, 0.25), transparent),
+    radial-gradient(1px 1px at 62% 55%, rgba(186, 230, 253, 0.3), transparent);
+}
+
+/* Honour the OS-level reduced-motion setting. Transitions collapse to
+   effectively instant rather than being removed outright, so state changes
+   (accordion open, menu toggle) still complete and nothing gets stuck
+   mid-animation. framer-motion is handled separately via MotionConfig. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, MessageCircle, ArrowUp } from "lucide-react";
 import { SITE } from "@/lib/utils";
+import { EASE_PREMIUM } from "@/lib/motion";
 
 export default function FloatingButtons() {
   const [showTop, setShowTop] = useState(false);
+  const showTopRef = useRef(false);
 
   useEffect(() => {
     let ticking = false;
@@ -14,8 +16,15 @@ export default function FloatingButtons() {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        setShowTop(window.scrollY > 600);
         ticking = false;
+        const next = window.scrollY > 600;
+        // Guard on a ref rather than calling setState every frame. React
+        // bails out of same-value updates, but it still has to enter the
+        // scheduler to find that out — 60 times a second, for the whole
+        // scroll. This crosses the React boundary twice per page instead.
+        if (next === showTopRef.current) return;
+        showTopRef.current = next;
+        setShowTop(next);
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -27,9 +36,10 @@ export default function FloatingButtons() {
       <AnimatePresence>
         {showTop && (
           <motion.button
-            initial={{ opacity: 0, scale: 0.6, y: 10 }}
+            initial={{ opacity: 0, scale: 0.8, y: 8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.6, y: 10 }}
+            exit={{ opacity: 0, scale: 0.8, y: 8 }}
+            transition={{ duration: 0.18, ease: EASE_PREMIUM }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex h-11 w-11 items-center justify-center rounded-full bg-navy text-white shadow-premium"
             aria-label="Back to top"
@@ -43,9 +53,9 @@ export default function FloatingButtons() {
         href={`tel:+${SITE.phoneRaw}`}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.6 }}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
+        transition={{ delay: 0.4, duration: 0.24, ease: EASE_PREMIUM }}
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.94 }}
         className="flex h-14 w-14 items-center justify-center rounded-full bg-royal-gradient text-white shadow-premium"
         aria-label="Call SRAJ Construction"
       >
@@ -60,9 +70,9 @@ export default function FloatingButtons() {
         rel="noopener noreferrer"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.4 }}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
+        transition={{ delay: 0.28, duration: 0.24, ease: EASE_PREMIUM }}
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.94 }}
         className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-premium"
         aria-label="Chat on WhatsApp"
       >

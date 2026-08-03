@@ -2,7 +2,6 @@ import {
   Ban,
   Boxes,
   ChefHat,
-  ClipboardList,
   Construction,
   DoorOpen,
   Droplets,
@@ -26,7 +25,6 @@ export const EXCLUSIONS_ID = "__exclusions";
 // icon for the shared navigator. No section data is added/removed/renamed.
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   design: PenTool,
-  projectManagement: ClipboardList,
   structure: Construction,
   bathroomPlumbing: Droplets,
   flooring: LayoutGrid,

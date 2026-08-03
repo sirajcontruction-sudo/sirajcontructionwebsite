@@ -1,11 +1,12 @@
 "use client";
 
 import { memo } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import type { ConstructionTier } from "@/data/packages";
 import { useEnquiry } from "@/lib/enquiry-context";
 import { cn } from "@/lib/utils";
+import { DURATION, EASE_PREMIUM } from "@/lib/motion";
 import FeatureRow from "./FeatureRow";
 import { EXCLUSIONS_ID } from "./categories";
 
@@ -60,14 +61,17 @@ function MobilePackageCard({ tier, activeCategoryId }: MobilePackageCardProps) {
 
         {/* Synced category content */}
         <div className="flex-1 px-6 py-5">
-          <AnimatePresence mode="popLayout" initial={false}>
+          {/* `layout` + `popLayout` removed: this is the mobile path, where
+              FLIP measurement is most expensive and least affordable. The
+              card's height changes with the category either way — animating
+              that change forced a layout pass per frame on every visible
+              card. Keying on the category replays the same fade/rise. */}
+          <div>
             <motion.div
               key={activeCategoryId}
-              layout
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
             >
               {activeCategoryId === EXCLUSIONS_ID ? (
                 <div className="flex flex-wrap gap-2">
@@ -83,12 +87,12 @@ function MobilePackageCard({ tier, activeCategoryId }: MobilePackageCardProps) {
               ) : activeSection ? (
                 <ul className="divide-y divide-black/5">
                   {activeSection.lines.map((line) => (
-                    <FeatureRow key={line.label} {...line} />
+                    <FeatureRow key={line.label} className="min-h-[3.25rem]" {...line} />
                   ))}
                 </ul>
               ) : null}
             </motion.div>
-          </AnimatePresence>
+          </div>
         </div>
 
         {/* CTA — always reachable, large touch target */}

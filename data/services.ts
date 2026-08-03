@@ -40,7 +40,11 @@ export const services: Service[] = [
     description:
       "Modular kitchens, wardrobes and full-home interiors in premium plywood, laminates and finishes.",
     icon: Sofa,
-    points: ["Modular kitchen & wardrobes", "Century Ply certified work", "3D interior visualisation"],
+    points: [
+      "Modular kitchen & wardrobes",
+      "False Ceiling & Wall Paneling",
+      "3D interior visualisation",
+    ],
   },
   {
     id: "turnkey",

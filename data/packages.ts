@@ -40,12 +40,11 @@ export interface ConstructionTier {
 // ----------------------------------------------------------------------------
 const SECTION_TITLES = {
   design: "Design",
-  projectManagement: "Project Management",
   structure: "Structure",
-  bathroomPlumbing: "Bathroom & Plumbing",
+  bathroomPlumbing: "Bathroom",
   flooring: "Flooring",
-  kitchenDining: "Kitchen & Dining",
-  doorsWindowsRailings: "Doors, Windows & Railings",
+  kitchenDining: "Kitchen",
+  doorsWindowsRailings: "Joinery",
   painting: "Painting",
   electrical: "Electrical",
   otherInclusions: "Other Inclusions",
@@ -66,16 +65,6 @@ const budgetSections: AccordionSection[] = [
       { label: "Electrical Drawings", value: "Not Included" },
       { label: "Plumbing Drawings", value: "Not Included" },
       { label: "Furniture Plan Drawings", value: "Not Included" },
-    ],
-  },
-  {
-    id: "projectManagement",
-    title: SECTION_TITLES.projectManagement,
-    lines: [
-      { label: "Site Engineer", value: "Site Supervision & Quality Monitoring" },
-      { label: "Project Manager", value: "Visit site twice a week" },
-      { label: "Android/iOS App", value: "Daily photo upload, project status monitoring" },
-      { label: "Architect", value: "Support till design completion" },
     ],
   },
   {
@@ -182,16 +171,6 @@ const economicSections: AccordionSection[] = [
     ],
   },
   {
-    id: "projectManagement",
-    title: SECTION_TITLES.projectManagement,
-    lines: [
-      { label: "Site Engineer", value: "Site Supervision & Quality Monitoring" },
-      { label: "Project Manager", value: "Daily site visit" },
-      { label: "Android/iOS App", value: "Daily photo upload, project status monitoring" },
-      { label: "Architect", value: "Support till design completion" },
-    ],
-  },
-  {
     id: "structure",
     title: SECTION_TITLES.structure,
     lines: [
@@ -295,16 +274,6 @@ const premiumSections: AccordionSection[] = [
     ],
   },
   {
-    id: "projectManagement",
-    title: SECTION_TITLES.projectManagement,
-    lines: [
-      { label: "Site Engineer", value: "Site Supervision & Quality Monitoring" },
-      { label: "Project Manager", value: "Daily site visit" },
-      { label: "Android/iOS App", value: "Daily photo upload, project status monitoring" },
-      { label: "Architect", value: "Dedicated architect, stage-wise site visit, material selection support" },
-    ],
-  },
-  {
     id: "structure",
     title: SECTION_TITLES.structure,
     lines: [
@@ -405,20 +374,6 @@ const luxurySections: AccordionSection[] = [
       { label: "Electrical Drawings", value: "Included" },
       { label: "Plumbing Drawings", value: "Included" },
       { label: "Furniture Plan Drawings", value: "Included" },
-    ],
-  },
-  {
-    id: "projectManagement",
-    title: SECTION_TITLES.projectManagement,
-    lines: [
-      { label: "Site Engineer", value: "Site Supervision & Quality Monitoring" },
-      { label: "Project Manager", value: "Daily site visit" },
-      { label: "Android/iOS App", value: "Daily photo upload, project status monitoring" },
-      {
-        label: "Architect",
-        value:
-          "Dedicated architect, frequent site visits, material & brand selection support including interiors and home decor",
-      },
     ],
   },
   {
@@ -542,6 +497,7 @@ export const constructionTiers: ConstructionTier[] = [
     name: "Economic",
     rate: 2499,
     tagline: "Balanced value for growing families",
+    popular: true,
     sections: economicSections,
     exclusions: commonExclusions,
   },
@@ -550,7 +506,6 @@ export const constructionTiers: ConstructionTier[] = [
     name: "Premium",
     rate: 2799,
     tagline: "Elevated finishes, refined detailing",
-    popular: true,
     sections: premiumSections,
     exclusions: commonExclusions,
   },

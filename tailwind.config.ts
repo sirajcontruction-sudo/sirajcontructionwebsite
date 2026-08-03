@@ -2,6 +2,12 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   darkMode: "class",
+  future: {
+    // Compiles every `hover:` utility inside `@media (hover: hover)`. Without
+    // it, touch browsers emulate :hover on tap and the hover state sticks to
+    // the last-tapped card until you tap elsewhere — which reads as lag.
+    hoverOnlyWhenSupported: true,
+  },
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -41,6 +47,9 @@ const config: Config = {
         display: ["var(--font-display)", "system-ui", "sans-serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
+      transitionTimingFunction: {
+        premium: "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
       backgroundImage: {
         "royal-gradient": "linear-gradient(135deg, #0a1233 0%, #1e40af 55%, #2447e6 100%)",
         "sky-gradient": "linear-gradient(135deg, #1e40af 0%, #38bdf8 100%)",
@@ -52,34 +61,15 @@ const config: Config = {
         "glow-sky": "0 0 40px rgba(56,189,248,0.35)",
       },
       borderRadius: {
-        xl2: "1.25rem",
         "3xl": "1.75rem",
         "4xl": "2.25rem",
       },
-      keyframes: {
-        float: {
-          "0%,100%": { transform: "translateY(0px)" },
-          "50%": { transform: "translateY(-14px)" },
-        },
-        "spin-slow": {
-          from: { transform: "rotate(0deg)" },
-          to: { transform: "rotate(360deg)" },
-        },
-        marquee: {
-          "0%": { transform: "translateX(0%)" },
-          "100%": { transform: "translateX(-50%)" },
-        },
-        shimmer: {
-          "0%": { backgroundPosition: "-200% 0" },
-          "100%": { backgroundPosition: "200% 0" },
-        },
-      },
-      animation: {
-        float: "float 6s ease-in-out infinite",
-        "spin-slow": "spin-slow 20s linear infinite",
-        marquee: "marquee 30s linear infinite",
-        shimmer: "shimmer 2.5s linear infinite",
-      },
+      // No keyframes here. The only continuous animation on the site is the
+      // hero logo float, and it lives in globals.css because it needs a
+      // custom property for the reduced mobile travel distance — something
+      // Tailwind's keyframe config can't express. The old float / spin-slow /
+      // marquee / shimmer entries had no `animate-*` utility anywhere in the
+      // codebase, so Tailwind never emitted them — dead config, removed.
     },
   },
   plugins: [],
