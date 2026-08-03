@@ -119,7 +119,7 @@ const budgetSections: AccordionSection[] = [
     title: SECTION_TITLES.doorsWindowsRailings,
     lines: [
       { label: "Window", value: "Aluminium sliding, glass shutter — Jindal" },
-      { label: "Main Door", value: "Teak wood 5\"x3\", up to ₹25,000" },
+      { label: "Main Door", value: "Teak Wood Door with Frame (5\" × 3\"), up to ₹25,000" },
       { label: "Internal Doors", value: "Membrane / Flush, Sal wood frame, up to ₹8,000" },
       { label: "Pooja Room Door", value: "Not Included" },
       { label: "Hand Rail", value: "MS with enamel paint" },
@@ -222,7 +222,7 @@ const economicSections: AccordionSection[] = [
     title: SECTION_TITLES.doorsWindowsRailings,
     lines: [
       { label: "Window", value: "UPVC sliding, glass shutter — Venesta" },
-      { label: "Main Door", value: "Teak wood 5\"x3\", up to ₹35,000" },
+      { label: "Main Door", value: "Teak Wood Door with Frame (5\" × 3\"), up to ₹35,000" },
       { label: "Internal Doors", value: "Membrane / Flush, Sal wood frame, up to ₹10,000" },
       { label: "Pooja Room Door", value: "Not Included" },
       { label: "Hand Rail", value: "MS with enamel paint" },
@@ -325,7 +325,7 @@ const premiumSections: AccordionSection[] = [
     title: SECTION_TITLES.doorsWindowsRailings,
     lines: [
       { label: "Window", value: "UPVC, glass + mesh shutter — Prominance" },
-      { label: "Main Door", value: "Teak wood 5\"x3.5\", up to ₹45,000" },
+      { label: "Main Door", value: "Teak Wood Door with Frame (5\" × 3.5\"), up to ₹45,000" },
       { label: "Internal Doors", value: "Membrane / Flush, Sal wood frame, up to ₹12,000" },
       { label: "Pooja Room Door", value: "Teak wood, up to ₹15,000" },
       { label: "Hand Rail", value: "SS Grade 304" },
@@ -428,7 +428,7 @@ const luxurySections: AccordionSection[] = [
     title: SECTION_TITLES.doorsWindowsRailings,
     lines: [
       { label: "Window", value: "UPVC, glass + mesh shutter — Fenesta" },
-      { label: "Main Door", value: "Teak wood 5\"x3.5\", up to ₹55,000" },
+      { label: "Main Door", value: "Teak Wood Door with Frame (5\" × 3.5\"), up to ₹55,000" },
       { label: "Internal Doors", value: "Membrane / Flush, Sal wood frame, up to ₹15,000" },
       { label: "Pooja Room Door", value: "Teak wood, up to ₹25,000" },
       { label: "Hand Rail", value: "SS + Glass, Grade 304" },
