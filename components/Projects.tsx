@@ -21,12 +21,44 @@ type Project = {
   title: string;
   category: Category;
   image: string;
+  /**
+   * `object-position` for the grid thumbnail. Cards are a fixed height and the
+   * artwork is `object-cover`, so a portrait source gets cropped top and
+   * bottom. Default centre framing is right for almost everything; this exists
+   * for the shots where the meaningful content is not in the middle.
+   */
+  focus?: string;
 };
 
+/**
+ * Every file in /public/projects/Construction, in order.
+ *
+ * 1-3 were already here; 4-6 were sitting in the folder unreferenced, so they
+ * never rendered anywhere on the site. Titles are written from the actual
+ * photographs rather than the filenames, since `construction-N.jpeg` carries
+ * no project association to preserve — and the title doubles as the `alt`
+ * text, so it is doing accessibility and SEO work too.
+ */
 const constructionProjects: Project[] = [
   { id: "c1", title: "Premium Duplex Residence", category: "Construction", image: "/projects/Construction/construction-1.jpeg" },
   { id: "c2", title: "Modern Family Residence", category: "Construction", image: "/projects/Construction/construction-2.jpeg" },
   { id: "c3", title: "Contemporary Luxury Home", category: "Construction", image: "/projects/Construction/construction-3.jpeg" },
+  { id: "c4", title: "Twilight Villa Elevation", category: "Construction", image: "/projects/Construction/construction-4.jpeg" },
+  { id: "c5", title: "Cantilevered Modern Residence", category: "Construction", image: "/projects/Construction/construction-5.jpeg" },
+  {
+    id: "c6",
+    title: "Renovation — Before & After",
+    category: "Construction",
+    image: "/projects/Construction/construction-6.jpeg",
+    // A portrait before/after split with the BEFORE and AFTER captions burned
+    // into the top of the frame. At 825x1024 inside a ~378x320 card,
+    // `object-cover` scales to 0.458 and crops 699px vertically — centred,
+    // that removes ~162px off the top and takes both captions with it, which
+    // is the entire point of the image. Anchoring to the top keeps them and
+    // crops the driveway instead. The lightbox uses `object-contain`, so the
+    // full frame is always available on click.
+    focus: "object-top",
+  },
 ];
 
 const interiorProjects: Project[] = [
@@ -165,7 +197,10 @@ const ProjectCard = memo(function ProjectCard({
           alt={project.title}
           priority={priority}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-300 ease-premium group-hover:scale-[1.06]"
+          className={cn(
+            "object-cover transition-transform duration-300 ease-premium group-hover:scale-[1.06]",
+            project.focus
+          )}
         />
 
         {/* Static gradient. It previously carried `transition-opacity` plus a
@@ -435,13 +470,21 @@ export default function Projects() {
         <div className="mt-14">
           <h3 className="font-display text-2xl font-semibold text-navy">Construction</h3>
           {/* Plain div: the grid is a fixed list, so there was nothing for a
-              `layout` animation to animate — it only added measurement cost. */}
+              `layout` animation to animate — it only added measurement cost.
+
+              No `priority` on any card any more. `priority` emits an
+              unconditional <link rel="preload"> and forces eager loading, but
+              this whole section renders far below the fold — the two preloads
+              it was emitting competed with the hero for bandwidth on first
+              paint. Every card is lazy now, which is what `loading="lazy"`
+              in ProjectImage already resolves to; the browser fetches them as
+              the visitor approaches. The lightbox keeps `priority`, because
+              there the visitor has explicitly asked for the image. */}
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {constructionProjects.map((p, i) => (
+            {constructionProjects.map((p) => (
               <ProjectCard
                 key={p.id}
                 project={p}
-                priority={i === 0}
                 onOpen={() => openLightbox(constructionProjects, p)}
               />
             ))}
@@ -456,11 +499,10 @@ export default function Projects() {
               card to animate a change that doesn't move anything. The new
               cards animate themselves in via their own reveal transition. */}
           <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {visibleInterior.map((p, i) => (
+            {visibleInterior.map((p) => (
               <ProjectCard
                 key={p.id}
                 project={p}
-                priority={i === 0}
                 onOpen={() => openLightbox(interiorProjects, p)}
               />
             ))}
