@@ -5,7 +5,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Navigation, MapPin, Play } from "lucide-react";
 import { SITE } from "@/lib/utils";
-import { DURATION, EASE_PREMIUM } from "@/lib/motion";
+import { REVEAL_FROM, VIEWPORT_ONCE_80, revealTransition } from "@/lib/motion";
 
 export default function GoogleMap() {
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -14,10 +14,9 @@ export default function GoogleMap() {
     <section className="relative bg-white pb-24">
       <div className="container-px mx-auto max-w-7xl">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
+          initial={REVEAL_FROM}
+          whileInView={{ opacity: 1, y: 0, transition: revealTransition() }}
+          viewport={VIEWPORT_ONCE_80}
           className="overflow-hidden rounded-3xl border border-black/5 shadow-glass"
         >
           <div className="grid lg:grid-cols-[1fr_1.6fr]">

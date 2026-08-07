@@ -2,9 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-// `next/image` is no longer imported here: the two logo <Image> elements it
-// served belonged to the showcase card that HeroVisual replaces. The hero's
-// image is now inside HeroVisual, so this file ships no image code at all.
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useEnquiry } from "@/lib/enquiry-context";
 
@@ -146,18 +143,21 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Right column — the hero's original box, unchanged: `mx-auto hidden
-            aspect-[4/5] w-full max-w-md lg:block`, i.e. 448x560 at lg. The
-            building is composed *inside* that box by HeroVisual rather than
-            the box being resized to fit the artwork, so the grid, the column
-            widths and the section height are all exactly as they were.
+        {/* Right column.
+            `aspect-[1339/1175]` is the render's exact native ratio, so the
+            image fills the panel edge to edge with no letterboxing and no
+            seam between its near-white background and the glass surface —
+            and, because it is never scaled to a different shape, nothing in
+            the building is ever cropped.
 
-            The entrance animation moved inside HeroVisual too — it now runs
-            on the glass panel itself so the panel, rings and glow can stagger
-            against each other. */}
-        <div className="relative mx-auto hidden aspect-[4/5] w-full max-w-md lg:block">
+            Shorter than the 4:5 box it replaces (393px vs 560px at
+            max-w-md), and the taller left column drives the hero's height at
+            this breakpoint, so the section's height and spacing are
+            unchanged. `hidden lg:block` is kept exactly as it was. */}
+        <div className="relative mx-auto hidden aspect-[1339/1175] w-full max-w-md lg:block">
           <HeroVisual />
         </div>
+
       </div>
     </section>
   );

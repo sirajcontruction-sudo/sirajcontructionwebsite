@@ -5,7 +5,14 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ImageOff, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { DURATION, EASE_PREMIUM, hoverLift } from "@/lib/motion";
+import {
+  EASE_PREMIUM,
+  REVEAL_FROM,
+  VIEWPORT_ONCE_60,
+  hoverLift,
+  revealTransition,
+  tapPress,
+} from "@/lib/motion";
 
 type Category = "Construction" | "Interior";
 
@@ -139,12 +146,17 @@ const ProjectCard = memo(function ProjectCard({
       // synchronous style+layout pass per frame per card. With 6-12 cards
       // that is the single most expensive thing on this page. The reveal
       // and hover below are pure transform/opacity and need no measurement.
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
+      //
+      // Reveal, hover and press each carry their own transition. Sharing one
+      // component-level `transition` prop meant hover and tap both inherited
+      // the reveal's 240ms card duration, which is noticeably slow for direct
+      // pointer feedback — press now matches `.btn-primary:active` (180ms)
+      // and hover matches the `.hover-lift` class used above the fold (200ms).
+      initial={REVEAL_FROM}
+      whileInView={{ opacity: 1, y: 0, transition: revealTransition() }}
+      viewport={VIEWPORT_ONCE_60}
       whileHover={hoverLift}
-      whileTap={{ scale: 0.985 }}
+      whileTap={tapPress}
       className="group relative block w-full overflow-hidden rounded-3xl text-left shadow-glass focus:outline-none focus-visible:ring-2 focus-visible:ring-royal-600"
     >
       <div className="relative h-72 w-full overflow-hidden sm:h-80">
@@ -254,7 +266,7 @@ const Lightbox = memo(function Lightbox({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0.25, ease: EASE_PREMIUM }}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-navy/95 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
@@ -296,7 +308,7 @@ const Lightbox = memo(function Lightbox({
         initial={{ opacity: 0, scale: 0.94, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+        transition={{ duration: 0.3, ease: EASE_PREMIUM }}
         onClick={(e) => e.stopPropagation()}
         className="relative flex max-h-[85vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-navy shadow-2xl"
       >

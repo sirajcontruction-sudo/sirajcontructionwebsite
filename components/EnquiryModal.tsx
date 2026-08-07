@@ -6,6 +6,15 @@ import { useForm } from "react-hook-form";
 import { X, Send } from "lucide-react";
 import { useEnquiry, useEnquiryState } from "@/lib/enquiry-context";
 import { SITE } from "@/lib/utils";
+import { DURATION, EASE_PREMIUM } from "@/lib/motion";
+
+/* The modal is three stacked layers (wrapper, backdrop, panel) that read as
+   one object. The wrapper and backdrop previously had no transition at all,
+   so they faded on framer's 300ms `[0.25, 0.1, 0.35, 1]` default while the
+   panel used 240ms EASE_PREMIUM — the backdrop was still settling ~60ms
+   after the panel had finished, which is what made the open read as soft
+   rather than crisp. All three now share one curve and one duration. */
+const MODAL_FADE = { duration: DURATION.card, ease: EASE_PREMIUM } as const;
 
 type FormValues = {
   name: string;
@@ -58,12 +67,14 @@ Thank you for contacting SRAJ Construction & Interior.`;
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={MODAL_FADE}
           className="fixed inset-0 z-[70] flex items-center justify-center p-4"
         >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={MODAL_FADE}
             onClick={closeEnquiry}
             className="absolute inset-0 bg-navy/70 backdrop-blur-sm"
           />
@@ -71,7 +82,7 @@ Thank you for contacting SRAJ Construction & Interior.`;
             initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
-            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            transition={MODAL_FADE}
             className="relative w-full max-w-md rounded-3xl bg-white p-8 shadow-premium"
           >
             <button

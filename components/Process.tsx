@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { processSteps } from "@/data/process";
-import { DURATION, EASE_PREMIUM } from "@/lib/motion";
+import { REVEAL_FROM, VIEWPORT_ONCE_80, revealTransition } from "@/lib/motion";
 
 export default function Process() {
   return (
@@ -21,10 +21,9 @@ export default function Process() {
               return (
                 <motion.div
                   key={s.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: DURATION.card, ease: EASE_PREMIUM }}
+                  initial={REVEAL_FROM}
+                  whileInView={{ opacity: 1, y: 0, transition: revealTransition() }}
+                  viewport={VIEWPORT_ONCE_80}
                   className={`flex flex-col items-center gap-6 lg:flex-row ${isEven ? "" : "lg:flex-row-reverse"}`}
                 >
                   <div className={`flex-1 ${isEven ? "lg:text-right" : "lg:text-left"} text-center lg:text-inherit`}>

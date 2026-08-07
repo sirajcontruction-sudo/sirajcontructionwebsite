@@ -6,7 +6,13 @@ import { Sparkles } from "lucide-react";
 import type { ConstructionTier } from "@/data/packages";
 import { useEnquiry } from "@/lib/enquiry-context";
 import { cn } from "@/lib/utils";
-import { DURATION, EASE_PREMIUM, hoverLift, staggerDelay } from "@/lib/motion";
+import {
+  REVEAL_FROM,
+  VIEWPORT_ONCE_80,
+  hoverLift,
+  revealTransition,
+  staggerDelay,
+} from "@/lib/motion";
 
 interface PackageHeaderCardProps {
   tier: ConstructionTier;
@@ -24,10 +30,12 @@ function PackageHeaderCard({ tier, index }: PackageHeaderCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: DURATION.card, delay: staggerDelay(index, 0.06), ease: EASE_PREMIUM }}
+      initial={REVEAL_FROM}
+      // Stagger on the target, not the component — a prop-level `transition`
+      // is what `whileHover` falls back to, so this card's 180ms reveal delay
+      // was also delaying its hover lift and its drop back down.
+      whileInView={{ opacity: 1, y: 0, transition: revealTransition(staggerDelay(index, 0.06)) }}
+      viewport={VIEWPORT_ONCE_80}
       whileHover={hoverLift}
       className="relative flex h-full flex-col"
     >

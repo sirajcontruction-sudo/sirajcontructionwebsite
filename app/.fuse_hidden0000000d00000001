@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --font-display: "Playfair Display", Georgia, serif;
+  --font-display: "Fraunces", serif;
   --font-sans: "Inter", system-ui, sans-serif;
 
   /* Single premium easing curve, shared by every CSS transition below so
@@ -203,8 +203,8 @@ summary {
 /* Typographic hygiene for display headings.
    `font-synthesis: none` is the important one: it forbids the browser from
    faking a weight it does not have by smearing the nearest one. With the
-   variable Playfair Display covering 400-900 nothing needs faking, so this is
-   a guard against the bug ever returning if a weight is dropped later. */
+   variable Fraunces now covering 100-900 nothing needs faking, so this is a
+   guard against the bug ever returning if a weight is dropped later. */
 h1,
 h2,
 h3,
@@ -458,7 +458,7 @@ h3,
   }
 }
 .enter-up {
-  animation: enter-up 360ms var(--ease-premium) backwards;
+  animation: enter-up 360ms var(--ease-premium) both;
   animation-delay: var(--enter-delay, 0ms);
 }
 
@@ -471,7 +471,7 @@ h3,
   }
 }
 .enter-fade {
-  animation: enter-fade 360ms var(--ease-premium) backwards;
+  animation: enter-fade 360ms var(--ease-premium) both;
   animation-delay: var(--enter-delay, 0ms);
 }
 
@@ -595,147 +595,45 @@ h3,
     transform: translate3d(0, 0, 0);
   }
   50% {
-    transform: translate3d(0, -9px, 0);
+    transform: translate3d(0, -14px, 0);
   }
 }
 .hv-float {
-  animation: hv-float 10s ease-in-out infinite;
+  animation: hv-float 7s ease-in-out infinite;
   will-change: transform;
 }
 
-/* --- Ambient bloom -------------------------------------------------------
-   What the light beams were replaced with. A wide, very soft radial that
-   drifts on a long cycle — no edges, no streaks, nothing that reads as a
-   drawn shape. Instances are placed and tinted individually in HeroVisual;
-   one of them sits low and left specifically to fill the dead corner the
-   composition had.
+/* --- 2. Orbit rings ------------------------------------------------------
+   Two counter-rotating rings. The SVG stroke, its gradient and its neon
+   drop-shadow are all STATIC: they rasterise once into the layer, and every
+   frame after that is the compositor spinning a finished texture. Distance
+   and stroke complexity therefore have no bearing on cost.
 
-   `translate` + `opacity` only. The gradient is soft by construction, so
-   there is no blur filter to re-evaluate per frame. */
-@keyframes hv-bloom {
-  0%,
-  100% {
-    opacity: var(--hv-bloom-min, 0.3);
-    transform: translate3d(-4%, 2%, 0) scale(0.95);
+   Counter-rotation matters visually — two rings turning the same way read as
+   one wobbling ring; opposed, they read as an orbit. */
+@keyframes hv-spin {
+  from {
+    transform: rotate(0deg);
   }
-  50% {
-    opacity: var(--hv-bloom-max, 0.62);
-    transform: translate3d(4%, -2%, 0) scale(1.08);
+  to {
+    transform: rotate(360deg);
   }
 }
-.hv-bloom {
-  animation: hv-bloom var(--hv-bloom-duration, 13s) ease-in-out infinite;
-  animation-delay: var(--hv-bloom-delay, 0s);
-  will-change: transform, opacity;
-}
-
-/* --- Podium neon rim -----------------------------------------------------
-   The blue edge light on the podium disc. Only `opacity` moves; the shadow
-   itself is painted once onto a pseudo-element, because interpolating a
-   box-shadow re-renders its blurred spread every frame. Brightened
-   considerably from the first pass — the disc was reading as a dark smudge
-   rather than a lit surface. */
-@keyframes hv-podium-pulse {
-  0%,
-  100% {
-    opacity: 0.7;
+@keyframes hv-spin-reverse {
+  from {
+    transform: rotate(360deg);
   }
-  50% {
-    opacity: 1;
+  to {
+    transform: rotate(0deg);
   }
 }
-.hv-podium-rim::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.75),
-    0 0 26px -1px rgba(56, 189, 248, 0.95), 0 0 70px -8px rgba(37, 99, 235, 0.75);
-  animation: hv-podium-pulse 6.5s ease-in-out infinite;
-  pointer-events: none;
-  will-change: opacity;
+.hv-ring-spin {
+  animation: hv-spin var(--hv-ring-duration, 22s) linear infinite;
+  will-change: transform;
 }
-
-/* --- Illuminated podium branding ----------------------------------------
-   The SRAJ plate. `text-shadow` is static — it is the glow itself, rasterised
-   once with the text. Only the overlaid highlight's opacity breathes, so the
-   lettering reads as physically lit rather than as an animated filter. */
-@keyframes hv-brand-glow {
-  0%,
-  100% {
-    opacity: 0.45;
-  }
-  50% {
-    opacity: 0.9;
-  }
-}
-/* --- Podium brand plate --------------------------------------------------
-   THE REAL BUG: the lettering was sized in fixed pixels while the plate that
-   holds it scales with the column. The right column is ~389px at lg and
-   448px at xl, so the plate is 22.6px at one end and 26px at the other — and
-   the fixed 14px + 7.5px stack needs 22.5px. At lg that left 0.1px of
-   headroom, so the text sat crammed against the `overflow-hidden` edge and
-   read as a dark smudge rather than as type.
-
-   `container-type: size` turns the plate into a query container, letting the
-   type be expressed as a fraction of it. The wordmark is then always the same
-   proportion of the plate at every breakpoint. The px values below are the
-   fallback for engines without container queries.
-
-   `.hv-plate` is now the recessed nameplate itself — 30px of genuinely
-   visible cylinder face — not the whole side wall. The wall's upper 41% is
-   occluded by the top ellipse, so sizing type against the full wall height
-   put the "SRAJ" line underneath it. */
-.hv-plate {
-  container-type: size;
-}
-
-.hv-brand {
-  font-size: 15px;
-  letter-spacing: 0.3em;
-  /* Optical centring: letter-spacing adds a trailing gap after the final
-     glyph that nothing balances, so a box-centred line sits visibly right.
-     Indenting by the same amount cancels it. */
-  text-indent: 0.3em;
-  color: #ffffff;
-  /* Six static layers, painted once with the glyphs — nothing here costs a
-     frame:
-       1px dark below     the cut edge in shadow
-       1px pale above     the bevel catching light — this is what makes it
-                          read as physically engraved rather than printed
-       tight white bloom  the INNER glow, sitting right on the letterform
-       cyan / blue / deep the OUTER glow, spilling onto the plate
-     Kept to a 3-stop falloff so it reads as illumination rather than a
-     halo. */
-  text-shadow: 0 1px 0 rgba(1, 4, 16, 1), 0 -1px 0 rgba(219, 234, 254, 0.85),
-    0 0 3px rgba(240, 249, 255, 0.95), 0 0 10px rgba(125, 211, 252, 0.95),
-    0 0 22px rgba(56, 189, 248, 0.75), 0 0 44px rgba(37, 99, 235, 0.5);
-}
-
-.hv-brand-sub {
-  font-size: 8px;
-  letter-spacing: 0.24em;
-  text-indent: 0.24em;
-  color: #bae6fd;
-  text-shadow: 0 1px 0 rgba(1, 4, 16, 0.98), 0 -1px 0 rgba(186, 230, 253, 0.4),
-    0 0 4px rgba(224, 242, 254, 0.8), 0 0 12px rgba(56, 189, 248, 0.8),
-    0 0 26px rgba(37, 99, 235, 0.45);
-}
-
-@supports (container-type: size) {
-  /* 53% / 28% of the nameplate height, +4% gap = 85% used. Yields 15.9px and
-     8.4px at xl — a 14% and 12% increase on the fixed sizes they replace —
-     with 4.5px spare, and scales down proportionally rather than clipping. */
-  .hv-brand {
-    font-size: 53cqh;
-  }
-  .hv-brand-sub {
-    font-size: 28cqh;
-  }
-}
-.hv-brand-halo {
-  animation: hv-brand-glow 6.5s ease-in-out infinite;
-  will-change: opacity;
+.hv-ring-spin-reverse {
+  animation: hv-spin-reverse var(--hv-ring-duration, 34s) linear infinite;
+  will-change: transform;
 }
 
 /* --- 3. Breathing glow ---------------------------------------------------
@@ -959,19 +857,15 @@ h3,
     display: none;
   }
   .hv-float,
+  .hv-ring-spin,
+  .hv-ring-spin-reverse,
   .hv-glow,
   .hv-sweep,
   .hv-rim::after,
   .hv-ambient,
   .hv-sheen,
-  .hv-podium-rim::after,
-  .hv-brand-halo,
   .hv-card-drift {
     will-change: auto;
-  }
-  .hv-podium-rim::after,
-  .hv-brand-halo {
-    opacity: 0.75;
   }
   .hv-sheen {
     display: none;

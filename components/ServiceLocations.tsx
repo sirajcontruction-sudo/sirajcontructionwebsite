@@ -3,7 +3,15 @@
 import { motion } from "framer-motion";
 import { CheckCircle2, MapPin } from "lucide-react";
 import { serviceLocations } from "@/data/locations";
-import { DURATION, EASE_PREMIUM, hoverLift, staggerDelay } from "@/lib/motion";
+import {
+  REVEAL_FROM,
+  REVEAL_FROM_SM,
+  VIEWPORT_ONCE,
+  VIEWPORT_ONCE_80,
+  hoverLift,
+  revealTransition,
+  staggerDelay,
+} from "@/lib/motion";
 
 export default function ServiceLocations() {
   return (
@@ -11,29 +19,33 @@ export default function ServiceLocations() {
       <div className="pointer-events-none absolute inset-0 bg-mesh opacity-50" />
       <div className="container-px relative mx-auto max-w-7xl">
         <div className="mx-auto max-w-2xl text-center">
+          {/* Each of these three carried either no transition at all or a
+              delay-only one. framer strips orchestration keys before deciding
+              whether a transition was supplied, so `{ delay: 0.05 }` counted
+              as none: `y` ran an under-damped spring on the main thread while
+              `opacity` ran a 300ms tween on a different curve. They now share
+              the site's one 240ms curve, like every other section. */}
           <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={REVEAL_FROM_SM}
+            whileInView={{ opacity: 1, y: 0, transition: revealTransition() }}
+            viewport={VIEWPORT_ONCE}
             className="eyebrow"
           >
             <MapPin className="h-3.5 w-3.5" />
             Where We Build
           </motion.span>
           <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.05 }}
+            initial={REVEAL_FROM}
+            whileInView={{ opacity: 1, y: 0, transition: revealTransition(0.05) }}
+            viewport={VIEWPORT_ONCE}
             className="heading-display mt-5 text-3xl sm:text-4xl"
           >
             Serving Chennai, Trichy &amp; Tirunelveli
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+            initial={REVEAL_FROM}
+            whileInView={{ opacity: 1, y: 0, transition: revealTransition(0.1) }}
+            viewport={VIEWPORT_ONCE}
             className="mt-4 text-sm leading-relaxed text-ink-soft sm:text-base"
           >
             One team, one standard of quality — construction, architecture and interior
@@ -45,10 +57,10 @@ export default function ServiceLocations() {
           {serviceLocations.map((loc, i) => (
             <motion.div
               key={loc.id}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: DURATION.card, delay: staggerDelay(i, 0.06), ease: EASE_PREMIUM }}
+              initial={REVEAL_FROM}
+              // Stagger on the target, not the component — see WhyChooseUs.
+              whileInView={{ opacity: 1, y: 0, transition: revealTransition(staggerDelay(i, 0.06)) }}
+              viewport={VIEWPORT_ONCE_80}
               whileHover={hoverLift}
               className="group card-premium relative overflow-hidden p-7"
             >

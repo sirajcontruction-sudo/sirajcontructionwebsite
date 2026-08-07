@@ -2,7 +2,13 @@
 
 import { motion } from "framer-motion";
 import { BadgeIndianRupee, Clock, FileCheck2, Wrench } from "lucide-react";
-import { DURATION, EASE_PREMIUM, hoverLift, staggerDelay } from "@/lib/motion";
+import {
+  REVEAL_FROM,
+  VIEWPORT_ONCE_80,
+  hoverLift,
+  revealTransition,
+  staggerDelay,
+} from "@/lib/motion";
 
 const reasons = [
   { icon: BadgeIndianRupee, title: "Fixed, Transparent Pricing", desc: "Every package is itemised down to the brand and grade — the quoted rate is the final rate." },
@@ -27,10 +33,13 @@ export default function WhyChooseUs() {
           {reasons.map((r, i) => (
             <motion.div
               key={r.title}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: DURATION.card, delay: staggerDelay(i, 0.06), ease: EASE_PREMIUM }}
+              initial={REVEAL_FROM}
+              // Stagger lives on the reveal target, NOT on a component-level
+              // `transition` prop — a prop-level delay is inherited by
+              // `whileHover`, so the last card in this row sat still for
+              // 240ms after the pointer arrived before it began to lift.
+              whileInView={{ opacity: 1, y: 0, transition: revealTransition(staggerDelay(i, 0.06)) }}
+              viewport={VIEWPORT_ONCE_80}
               whileHover={hoverLift}
               className="rounded-3xl border border-white/10 bg-white/[0.055] p-6"
             >

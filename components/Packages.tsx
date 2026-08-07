@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import {
+  REVEAL_FROM,
+  REVEAL_FROM_SM,
+  VIEWPORT_ONCE,
+  revealTransition,
+} from "@/lib/motion";
 import { constructionTiers } from "@/data/packages";
 import PackageHeaderCard from "@/components/packages/PackageHeaderCard";
 import PackageComparisonGrid from "@/components/packages/PackageComparisonGrid";
@@ -25,40 +31,43 @@ export default function Packages() {
     <section id="packages" className="section-py relative bg-mist">
       <div className="container-px mx-auto max-w-7xl">
         <div className="mx-auto max-w-2xl text-center">
+          {/* All four previously animated without a resolvable transition —
+              `{ delay: n }` alone is stripped by framer's
+              `isTransitionDefined()`, so `y` fell back to a main-thread
+              under-damped spring and `opacity` to a 300ms tween on an
+              unrelated curve. Same rise, same stagger, now on the site's one
+              240ms curve with both properties finishing together. */}
           <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={REVEAL_FROM_SM}
+            whileInView={{ opacity: 1, y: 0, transition: revealTransition() }}
+            viewport={VIEWPORT_ONCE}
             className="eyebrow"
           >
             Transparent Pricing
           </motion.span>
 
           <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.05 }}
+            initial={REVEAL_FROM}
+            whileInView={{ opacity: 1, y: 0, transition: revealTransition(0.05) }}
+            viewport={VIEWPORT_ONCE}
             className="heading-display mt-5 text-3xl sm:text-4xl"
           >
             Construction Packages
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.08 }}
+            initial={REVEAL_FROM}
+            whileInView={{ opacity: 1, y: 0, transition: revealTransition(0.08) }}
+            viewport={VIEWPORT_ONCE}
             className="mt-4 text-base font-semibold text-navy sm:text-lg"
           >
             Choose the perfect package for your dream home.
           </motion.p>
 
           <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.12 }}
+            initial={REVEAL_FROM}
+            whileInView={{ opacity: 1, y: 0, transition: revealTransition(0.12) }}
+            viewport={VIEWPORT_ONCE}
             className="mt-2 text-sm text-ink-soft sm:text-base"
           >
             Compare every package side-by-side with complete transparency.
